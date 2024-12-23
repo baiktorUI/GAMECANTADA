@@ -10,22 +10,28 @@ interface VotingContextType {
 
 const VotingContext = createContext<VotingContextType | null>(null);
 
+export function useVoting() {
+  const context = useContext(VotingContext);
+  if (!context) {
+    throw new Error('useVoting must be used within a VotingProvider');
+  }
+  return context;
+}
+
 export function VotingProvider({ children }: { children: React.ReactNode }) {
   const [questions, setQuestions] = useState<Question[]>(() => loadQuestions());
 
-  // Guardar preguntas cuando cambien
   useEffect(() => {
     saveQuestions(questions);
   }, [questions]);
 
-  // Actualizar preguntas periódicamente
   useEffect(() => {
     const interval = setInterval(() => {
       const storedQuestions = loadQuestions();
       if (JSON.stringify(storedQuestions) !== JSON.stringify(questions)) {
         setQuestions(storedQuestions);
       }
-    }, 1000);
+    }, 500);
 
     return () => clearInterval(interval);
   }, [questions]);
@@ -37,6 +43,7 @@ export function VotingProvider({ children }: { children: React.ReactNode }) {
         : q
     );
     setQuestions(updatedQuestions);
+    saveQuestions(updatedQuestions);
   };
 
   return (
@@ -48,12 +55,4 @@ export function VotingProvider({ children }: { children: React.ReactNode }) {
       {children}
     </VotingContext.Provider>
   );
-}
-
-export function useVoting() {
-  const context = useContext(VotingContext);
-  if (!context) {
-    throw new Error('useVoting must be used within a VotingProvider');
-  }
-  return context;
 }

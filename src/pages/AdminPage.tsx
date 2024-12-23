@@ -1,13 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { QuestionForm } from '../components/QuestionForm';
 import { AdminDashboard } from './AdminDashboard';
 import { useVoting } from '../context/VotingContext';
 import { Layout } from '../components/Layout';
+import { setAdminStatus } from '../utils/storage';
 import type { Question } from '../types';
 
 export function AdminPage() {
   const [showDashboard, setShowDashboard] = useState(false);
   const { setQuestions } = useVoting();
+
+  useEffect(() => {
+    // Marcar esta sesión como admin
+    setAdminStatus(true);
+  }, []);
 
   const handleSubmit = (questions: Question[]) => {
     setQuestions(questions);
