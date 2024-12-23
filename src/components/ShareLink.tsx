@@ -1,33 +1,45 @@
 import React from 'react';
-import { Share } from 'lucide-react';
-import { QRCodeSVG } from 'qrcode.react';
+import { Share, Copy } from 'lucide-react';
+import { useVoting } from '../context/VotingContext';
+import { generateVotingUrl } from '../utils/urlGenerator';
 
 interface ShareLinkProps {
   className?: string;
 }
 
 export function ShareLink({ className = '' }: ShareLinkProps) {
-  const getVotingUrl = () => {
-    const baseUrl = window.location.origin;
-    return `${baseUrl}/votacio/guanyador`;
+  const { questions } = useVoting();
+  const votingUrl = generateVotingUrl(questions[0]?.options || []);
+
+  const copyToClipboard = async () => {
+    try {
+      await navigator.clipboard.writeText(votingUrl);
+      alert('URL copiada al portapapeles');
+    } catch (err) {
+      console.error('Error al copiar:', err);
+    }
   };
 
   return (
     <div className={`glass-panel ${className}`}>
-      <div className="flex flex-col items-center justify-center">
-        <div className="flex items-center gap-3 mb-6">
-          <Share className="text-white" size={24} />
-          <h2 className="text-2xl font-bold text-white">
-            Escanea para votar
+      <div className="flex items-center gap-6">
+        <Share className="text-white" size={32} />
+        <div className="flex-1">
+          <h2 className="text-2xl font-bold text-white mb-2">
+            Enlace para votar
           </h2>
-        </div>
-        <div className="bg-white p-4 rounded-xl">
-          <QRCodeSVG 
-            value={getVotingUrl()}
-            size={200}
-            level="H"
-            includeMargin={true}
-          />
+          <div className="bg-white/20 rounded-xl p-4 flex items-center gap-2">
+            <code className="text-white flex-1 break-all">
+              {votingUrl}
+            </code>
+            <button 
+              onClick={copyToClipboard}
+              className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+              title="Copiar enlace"
+            >
+              <Copy className="text-white" size={20} />
+            </button>
+          </div>
         </div>
       </div>
     </div>
