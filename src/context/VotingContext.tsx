@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { votingWebSocket } from '../utils/websocket';
 import { STORAGE_KEYS, getStoredData, setStoredData } from '../utils/localStorage';
+import * as api from '../utils/api';
 
 interface VotingState {
   options: string[];
@@ -26,22 +27,21 @@ export function VotingProvider({ children }: { children: React.ReactNode }) {
   });
 
   useEffect(() => {
-    const fetchInitialState = async () => {
+    const initializeState = async () => {
       try {
-        const response = await fetch('/api/state');
-        const data = await response.json();
+        const initialState = await api.fetchState();
         setState(prev => ({
           ...prev,
-          options: data.options,
-          votes: data.votes,
-          votingEnabled: data.votingEnabled
+          options: initialState.options,
+          votes: initialState.votes,
+          votingEnabled: initialState.votingEnabled
         }));
       } catch (error) {
-        console.error('Error fetching initial state:', error);
+        console.error('Error initializing state:', error);
       }
     };
 
-    fetchInitialState();
+    initializeState();
 
     votingWebSocket.connect((newState) => {
       setState(prev => ({
@@ -57,36 +57,17 @@ export function VotingProvider({ children }: { children: React.ReactNode }) {
 
   const setOptions = async (newOptions: string[]) => {
     try {
-      const response = await fetch('/api/options', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ options: newOptions })
-      });
-
-      if (!response.ok) {
-        throw new Error('Error updating options');
-      }
-
-      setState(prev => ({ ...prev, options: newOptions }));
+      await api.updateOptions(newOptions);
     } catch (error) {
-      console.error('Error:', error);
+      console.error('Error updating options:', error);
     }
   };
 
   const toggleVoting = async () => {
     try {
-      const response = await fetch('/api/toggle-voting', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' }
-      });
-
-      if (!response.ok) {
-        throw new Error('Error toggling voting state');
-      }
-
-      setState(prev => ({ ...prev, votingEnabled: !prev.votingEnabled }));
+      await api.toggleVoting();
     } catch (error) {
-      console.error('Error:', error);
+      console.error('Error toggling voting:', error);
     }
   };
 
@@ -94,18 +75,11 @@ export function VotingProvider({ children }: { children: React.ReactNode }) {
     if (state.hasVoted || !state.votingEnabled) return;
 
     try {
-      const response = await fetch('/api/vote', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ index })
-      });
-
-      if (response.ok) {
-        setState(prev => ({ ...prev, hasVoted: true }));
-        setStoredData(STORAGE_KEYS.HAS_VOTED, true);
-      }
+      await api.submitVote(index);
+      setState(prev => ({ ...prev, hasVoted: true }));
+      setStoredData(STORAGE_KEYS.HAS_VOTED, true);
     } catch (error) {
-      console.error('Error:', error);
+      console.error('Error submitting vote:', error);
     }
   };
 
