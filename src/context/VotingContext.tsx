@@ -32,7 +32,7 @@ export function VotingProvider({ children }: { children: React.ReactNode }) {
         const initialState = await api.fetchState();
         setState(prev => ({
           ...prev,
-          options: initialState.options,
+          options: initialState.options.map(opt => opt || ''),
           votes: initialState.votes,
           votingEnabled: initialState.votingEnabled
         }));
@@ -46,7 +46,7 @@ export function VotingProvider({ children }: { children: React.ReactNode }) {
     votingWebSocket.connect((newState) => {
       setState(prev => ({
         ...prev,
-        options: newState.options,
+        options: newState.options.map(opt => opt || ''),
         votes: newState.votes,
         votingEnabled: newState.votingEnabled
       }));
@@ -58,6 +58,10 @@ export function VotingProvider({ children }: { children: React.ReactNode }) {
   const setOptions = async (newOptions: string[]) => {
     try {
       await api.updateOptions(newOptions);
+      setState(prev => ({
+        ...prev,
+        options: newOptions
+      }));
     } catch (error) {
       console.error('Error updating options:', error);
     }
@@ -65,7 +69,11 @@ export function VotingProvider({ children }: { children: React.ReactNode }) {
 
   const toggleVoting = async () => {
     try {
-      await api.toggleVoting();
+      const response = await api.toggleVoting();
+      setState(prev => ({
+        ...prev,
+        votingEnabled: response.votingEnabled
+      }));
     } catch (error) {
       console.error('Error toggling voting:', error);
     }

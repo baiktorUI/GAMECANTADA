@@ -32,7 +32,7 @@ export function AdminPage() {
               <div key={index} className="relative">
                 <input
                   type="text"
-                  value={option || ''}
+                  value={option ?? ''}
                   onChange={(e) => handleOptionChange(index, e.target.value)}
                   placeholder={`Opción ${index + 1}`}
                   className="input-field w-full text-white"
