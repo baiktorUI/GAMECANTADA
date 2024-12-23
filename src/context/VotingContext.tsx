@@ -10,9 +10,9 @@ interface VotingState {
 }
 
 interface VotingContextType extends VotingState {
-  setOptions: (options: string[]) => void;
-  toggleVoting: () => void;
-  handleVote: (index: number) => void;
+  setOptions: (options: string[]) => Promise<void>;
+  toggleVoting: () => Promise<void>;
+  handleVote: (index: number) => Promise<void>;
 }
 
 const VotingContext = createContext<VotingContextType | null>(null);
@@ -26,26 +26,29 @@ export function VotingProvider({ children }: { children: React.ReactNode }) {
   });
 
   useEffect(() => {
-    // Cargar estado inicial
-    fetch('/api/state')
-      .then(res => res.json())
-      .then(data => {
+    const fetchInitialState = async () => {
+      try {
+        const response = await fetch('/api/state');
+        const data = await response.json();
         setState(prev => ({
           ...prev,
           options: data.options,
           votes: data.votes,
           votingEnabled: data.votingEnabled
         }));
-      })
-      .catch(console.error);
+      } catch (error) {
+        console.error('Error fetching initial state:', error);
+      }
+    };
 
-    // Conectar WebSocket
-    votingWebSocket.connect((data) => {
+    fetchInitialState();
+
+    votingWebSocket.connect((newState) => {
       setState(prev => ({
         ...prev,
-        votes: data.votes,
-        options: data.options,
-        votingEnabled: data.votingEnabled
+        options: newState.options,
+        votes: newState.votes,
+        votingEnabled: newState.votingEnabled
       }));
     });
 
@@ -59,8 +62,12 @@ export function VotingProvider({ children }: { children: React.ReactNode }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ options: newOptions })
       });
-      
-      if (!response.ok) throw new Error('Error al actualizar opciones');
+
+      if (!response.ok) {
+        throw new Error('Error updating options');
+      }
+
+      setState(prev => ({ ...prev, options: newOptions }));
     } catch (error) {
       console.error('Error:', error);
     }
@@ -68,12 +75,16 @@ export function VotingProvider({ children }: { children: React.ReactNode }) {
 
   const toggleVoting = async () => {
     try {
-      const response = await fetch('/api/toggle-voting', { 
+      const response = await fetch('/api/toggle-voting', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' }
       });
-      
-      if (!response.ok) throw new Error('Error al cambiar estado de votación');
+
+      if (!response.ok) {
+        throw new Error('Error toggling voting state');
+      }
+
+      setState(prev => ({ ...prev, votingEnabled: !prev.votingEnabled }));
     } catch (error) {
       console.error('Error:', error);
     }
@@ -108,7 +119,7 @@ export function VotingProvider({ children }: { children: React.ReactNode }) {
 export function useVoting() {
   const context = useContext(VotingContext);
   if (!context) {
-    throw new Error('useVoting debe usarse dentro de VotingProvider');
+    throw new Error('useVoting must be used within a VotingProvider');
   }
   return context;
 }

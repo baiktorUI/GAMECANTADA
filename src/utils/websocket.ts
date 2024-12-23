@@ -16,14 +16,16 @@ class VotingWebSocket {
     }
 
     try {
-      // Usar la URL del WebSocket del servidor Express
-      this.ws = new WebSocket('ws://localhost:3001');
+      // Usar la URL relativa para que funcione en desarrollo y producción
+      const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+      const wsUrl = `${wsProtocol}//${window.location.host}/ws`;
+      
+      this.ws = new WebSocket(wsUrl);
 
       this.ws.onmessage = (event) => {
         try {
           const data = JSON.parse(event.data);
           if (data.type === 'STATE_UPDATE' && this.onStateUpdate) {
-            console.log('Received state update:', data); // Para debugging
             this.onStateUpdate({
               votes: data.votes,
               options: data.options,
