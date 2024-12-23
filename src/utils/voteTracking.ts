@@ -1,24 +1,30 @@
-// Prefijo para las claves de localStorage
+// Sistema de seguimiento de votos usando localStorage y sessionStorage para redundancia
 const VOTE_PREFIX = 'vote-session-';
+const SESSION_PREFIX = 'voting-session-';
 
-// Obtiene el ID de la sesión actual basado en las opciones
 export function getCurrentSessionId(options: string[]): string {
+  // Crear un ID único basado en las opciones disponibles
   return btoa(options.join('|'));
 }
 
 export function hasUserVotedInSession(sessionId: string): boolean {
-  return localStorage.getItem(`${VOTE_PREFIX}${sessionId}`) === 'true';
+  // Verificar tanto localStorage como sessionStorage
+  const localVoted = localStorage.getItem(`${VOTE_PREFIX}${sessionId}`);
+  const sessionVoted = sessionStorage.getItem(`${SESSION_PREFIX}${sessionId}`);
+  return localVoted === 'true' || sessionVoted === 'true';
 }
 
 export function markUserAsVotedInSession(sessionId: string): void {
-  localStorage.setItem(`${VOTE_PREFIX}${sessionId}`, 'true');
+  // Guardar en ambos storages para mayor seguridad
+  try {
+    localStorage.setItem(`${VOTE_PREFIX}${sessionId}`, 'true');
+    sessionStorage.setItem(`${SESSION_PREFIX}${sessionId}`, 'true');
+  } catch (error) {
+    console.error('Error al guardar el voto:', error);
+  }
 }
 
-// Limpia votos antiguos (opcional, para mantenimiento)
-export function cleanupOldVotes(): void {
-  Object.keys(localStorage).forEach(key => {
-    if (key.startsWith(VOTE_PREFIX)) {
-      localStorage.removeItem(key);
-    }
-  });
+export function getVoteCount(sessionId: string): number {
+  const count = localStorage.getItem(`${VOTE_PREFIX}${sessionId}-count`);
+  return count ? parseInt(count, 10) : 0;
 }
