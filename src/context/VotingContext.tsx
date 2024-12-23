@@ -12,41 +12,30 @@ interface VotingContextType {
 
 const VotingContext = createContext<VotingContextType | null>(null);
 
-export function useVoting() {
-  const context = useContext(VotingContext);
-  if (!context) {
-    throw new Error('useVoting debe ser usado dentro de VotingProvider');
-  }
-  return context;
-}
-
 export function VotingProvider({ children }: { children: React.ReactNode }) {
   const [questions, setQuestionsState] = useState<Question[]>(() => loadQuestions());
   const [userId] = useState(() => generateUserId());
 
   useEffect(() => {
-    const handleStorageChange = (event: StorageEvent) => {
-      if (event.key === 'voting-questions') {
-        const newQuestions = loadQuestions();
-        setQuestionsState(newQuestions);
-      }
+    // Escuchar cambios en el almacenamiento
+    const handleStorageChange = () => {
+      const newQuestions = loadQuestions();
+      setQuestionsState(newQuestions);
     };
 
+    // Escuchar eventos de storage y el evento personalizado
     window.addEventListener('storage', handleStorageChange);
-    
+    window.addEventListener('questionsUpdated', handleStorageChange);
+
     // Actualización periódica
-    const interval = setInterval(() => {
-      const newQuestions = loadQuestions();
-      if (JSON.stringify(newQuestions) !== JSON.stringify(questions)) {
-        setQuestionsState(newQuestions);
-      }
-    }, 1000);
+    const interval = setInterval(handleStorageChange, 1000);
 
     return () => {
       window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('questionsUpdated', handleStorageChange);
       clearInterval(interval);
     };
-  }, [questions]);
+  }, []);
 
   const setQuestions = (newQuestions: Question[]) => {
     saveQuestions(newQuestions);
@@ -77,4 +66,12 @@ export function VotingProvider({ children }: { children: React.ReactNode }) {
       {children}
     </VotingContext.Provider>
   );
+}
+
+export function useVoting() {
+  const context = useContext(VotingContext);
+  if (!context) {
+    throw new Error('useVoting debe ser usado dentro de VotingProvider');
+  }
+  return context;
 }
