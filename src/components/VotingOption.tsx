@@ -1,9 +1,12 @@
 import React from 'react';
-import { Vote } from '../types';
 import { EditableText } from './EditableText';
 
 interface VotingOptionProps {
-  option: Vote;
+  option: {
+    id: string;
+    name: string;
+    votes: number;
+  };
   onVote: () => void;
   onNameChange: (name: string) => void;
   isVotingActive: boolean;

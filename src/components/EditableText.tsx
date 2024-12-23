@@ -1,6 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Edit2 } from 'lucide-react';
-import { EditableTextProps } from '../types';
+
+interface EditableTextProps {
+  value: string;
+  onSave: (value: string) => void;
+  isEditable: boolean;
+}
 
 export const EditableText: React.FC<EditableTextProps> = ({ value, onSave, isEditable }) => {
   const [isEditing, setIsEditing] = useState(false);

@@ -1,54 +1,18 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Play, Pause } from 'lucide-react';
 import { VotingOption } from './components/VotingOption';
 import { VotingChart } from './components/VotingChart';
-import { Vote } from './types';
+import { useVoting } from './context/VotingContext';
 
 function App() {
-  const [isVotingActive, setIsVotingActive] = useState(false);
-  const [hasVoted, setHasVoted] = useState(false);
-  const [options, setOptions] = useState<Vote[]>([
-    { id: 1, name: 'Option 1', votes: 0 },
-    { id: 2, name: 'Option 2', votes: 0 },
-    { id: 3, name: 'Option 3', votes: 0 },
-  ]);
-
-  const handleVote = (optionId: number) => {
-    if (!hasVoted) {
-      setOptions((prevOptions) =>
-        prevOptions.map((option) =>
-          option.id === optionId
-            ? { ...option, votes: option.votes + 1 }
-            : option
-        )
-      );
-      setHasVoted(true);
-    }
-  };
-
-  const handleNameChange = (optionId: number, newName: string) => {
-    setOptions((prevOptions) =>
-      prevOptions.map((option) =>
-        option.id === optionId
-          ? { ...option, name: newName }
-          : option
-      )
-    );
-  };
-
-  const toggleVoting = () => {
-    if (isVotingActive) {
-      // Reset votes when stopping
-      setOptions((prevOptions) =>
-        prevOptions.map((option) => ({
-          ...option,
-          votes: 0,
-        }))
-      );
-      setHasVoted(false);
-    }
-    setIsVotingActive(!isVotingActive);
-  };
+  const {
+    isVotingActive,
+    options,
+    hasVoted,
+    toggleVoting,
+    handleVote,
+    handleNameChange,
+  } = useVoting();
 
   return (
     <div className="min-h-screen bg-gray-100 py-8 px-4">

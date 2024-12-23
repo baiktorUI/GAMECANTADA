@@ -8,10 +8,12 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from 'recharts';
-import { Vote } from '../types';
 
 interface VotingChartProps {
-  data: Vote[];
+  data: Array<{
+    name: string;
+    votes: number;
+  }>;
 }
 
 export const VotingChart: React.FC<VotingChartProps> = ({ data }) => {
