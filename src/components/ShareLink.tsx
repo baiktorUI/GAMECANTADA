@@ -1,6 +1,5 @@
 import React from 'react';
 import { Share, Copy } from 'lucide-react';
-import { useVoting } from '../context/VotingContext';
 import { generateVotingUrl } from '../utils/urlGenerator';
 
 interface ShareLinkProps {
@@ -8,8 +7,7 @@ interface ShareLinkProps {
 }
 
 export function ShareLink({ className = '' }: ShareLinkProps) {
-  const { questions } = useVoting();
-  const votingUrl = generateVotingUrl(questions[0]?.options || []);
+  const votingUrl = generateVotingUrl();
 
   const copyToClipboard = async () => {
     try {
