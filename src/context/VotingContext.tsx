@@ -15,39 +15,43 @@ const VotingContext = createContext<VotingContextType | null>(null);
 export function useVoting() {
   const context = useContext(VotingContext);
   if (!context) {
-    throw new Error('useVoting must be used within a VotingProvider');
+    throw new Error('useVoting debe ser usado dentro de VotingProvider');
   }
   return context;
 }
 
 export function VotingProvider({ children }: { children: React.ReactNode }) {
-  const [questions, setQuestions] = useState<Question[]>(() => loadQuestions());
+  const [questions, setQuestionsState] = useState<Question[]>(() => loadQuestions());
   const [userId] = useState(() => generateUserId());
 
-  // Sincronizar cambios entre pestañas
   useEffect(() => {
-    const handleStorage = (event: StorageEvent) => {
+    const handleStorageChange = (event: StorageEvent) => {
       if (event.key === 'voting-questions') {
-        const newQuestions = event.newValue ? JSON.parse(event.newValue) : [];
-        setQuestions(newQuestions);
+        const newQuestions = loadQuestions();
+        setQuestionsState(newQuestions);
       }
     };
 
-    window.addEventListener('storage', handleStorage);
-    return () => window.removeEventListener('storage', handleStorage);
-  }, []);
-
-  // Actualizar preguntas periódicamente
-  useEffect(() => {
+    window.addEventListener('storage', handleStorageChange);
+    
+    // Actualización periódica
     const interval = setInterval(() => {
-      const storedQuestions = loadQuestions();
-      if (JSON.stringify(storedQuestions) !== JSON.stringify(questions)) {
-        setQuestions(storedQuestions);
+      const newQuestions = loadQuestions();
+      if (JSON.stringify(newQuestions) !== JSON.stringify(questions)) {
+        setQuestionsState(newQuestions);
       }
     }, 1000);
 
-    return () => clearInterval(interval);
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      clearInterval(interval);
+    };
   }, [questions]);
+
+  const setQuestions = (newQuestions: Question[]) => {
+    saveQuestions(newQuestions);
+    setQuestionsState(newQuestions);
+  };
 
   const handleVote = (questionId: number, optionIndex: number) => {
     if (!hasVoted(userId)) {
@@ -57,7 +61,6 @@ export function VotingProvider({ children }: { children: React.ReactNode }) {
           : q
       );
       setQuestions(updatedQuestions);
-      saveQuestions(updatedQuestions);
       saveVote(userId, questionId);
     }
   };
