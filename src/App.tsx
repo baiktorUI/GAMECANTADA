@@ -1,27 +1,27 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { AdminPanel } from './components/AdminPanel';
-import { UserPanel } from './components/UserPanel';
+import { AdminPage } from './pages/AdminPage';
+import { UserVotingPage } from './pages/UserVotingPage';
 import { Layout } from './components/Layout';
 
 export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Navigate to="/votacio" replace />} />
+        <Route path="/" element={<Navigate to="/votacio/guanyador" replace />} />
         <Route 
           path="/admin" 
           element={
             <Layout>
-              <AdminPanel />
+              <AdminPage />
             </Layout>
           } 
         />
         <Route 
-          path="/votacio" 
+          path="/votacio/guanyador" 
           element={
             <Layout>
-              <UserPanel />
+              <UserVotingPage />
             </Layout>
           } 
         />

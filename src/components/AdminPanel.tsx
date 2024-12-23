@@ -21,7 +21,7 @@ export function AdminPanel() {
     votos: votes[index]
   }));
 
-  const votingUrl = `${window.location.origin}/votacio`;
+  const votingUrl = `${window.location.origin}/votacio/guanyador`;
 
   const copyVotingUrl = async () => {
     try {
