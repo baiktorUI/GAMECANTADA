@@ -16,15 +16,14 @@ class VotingWebSocket {
     }
 
     try {
-      const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-      const wsUrl = `${protocol}//${window.location.host}`;
-      
-      this.ws = new WebSocket(wsUrl);
+      // Usar la URL del WebSocket del servidor Express
+      this.ws = new WebSocket('ws://localhost:3001');
 
       this.ws.onmessage = (event) => {
         try {
           const data = JSON.parse(event.data);
           if (data.type === 'STATE_UPDATE' && this.onStateUpdate) {
+            console.log('Received state update:', data); // Para debugging
             this.onStateUpdate({
               votes: data.votes,
               options: data.options,
@@ -36,7 +35,13 @@ class VotingWebSocket {
         }
       };
 
+      this.ws.onopen = () => {
+        console.log('WebSocket connected');
+        this.reconnectAttempts = 0;
+      };
+
       this.ws.onclose = () => {
+        console.log('WebSocket disconnected, attempting to reconnect...');
         this.reconnectAttempts++;
         setTimeout(() => this.establishConnection(), 2000);
       };

@@ -18,6 +18,12 @@ const state = {
   votingEnabled: false
 };
 
+// Middleware para logging
+app.use((req, res, next) => {
+  console.log(`${req.method} ${req.url}`);
+  next();
+});
+
 // Configuración de CORS y JSON
 app.use(express.json());
 app.use((req, res, next) => {
@@ -29,13 +35,14 @@ app.use((req, res, next) => {
 
 // Función para enviar actualizaciones
 function broadcastState() {
+  console.log('Broadcasting state:', state); // Para debugging
   const message = JSON.stringify({
     type: 'STATE_UPDATE',
     ...state
   });
   
   wss.clients.forEach(client => {
-    if (client.readyState === 1) {
+    if (client.readyState === 1) { // WebSocket.OPEN
       client.send(message);
     }
   });
@@ -43,11 +50,13 @@ function broadcastState() {
 
 // Rutas API
 app.get('/api/state', (req, res) => {
+  console.log('Sending initial state:', state); // Para debugging
   res.json(state);
 });
 
 app.post('/api/options', (req, res) => {
   const { options } = req.body;
+  console.log('Received options update:', options); // Para debugging
   if (Array.isArray(options) && options.length === 3) {
     state.options = options;
     broadcastState();
@@ -59,6 +68,7 @@ app.post('/api/options', (req, res) => {
 
 app.post('/api/vote', (req, res) => {
   const { index } = req.body;
+  console.log('Received vote for index:', index); // Para debugging
   if (typeof index === 'number' && index >= 0 && index < 3 && state.votingEnabled) {
     state.votes[index]++;
     broadcastState();
@@ -70,12 +80,14 @@ app.post('/api/vote', (req, res) => {
 
 app.post('/api/toggle-voting', (req, res) => {
   state.votingEnabled = !state.votingEnabled;
+  console.log('Toggled voting state:', state.votingEnabled); // Para debugging
   broadcastState();
   res.json({ success: true });
 });
 
 // Conexiones WebSocket
 wss.on('connection', (ws) => {
+  console.log('New WebSocket connection'); // Para debugging
   ws.send(JSON.stringify({
     type: 'STATE_UPDATE',
     ...state
