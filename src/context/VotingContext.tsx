@@ -16,23 +16,20 @@ export function VotingProvider({ children }: { children: React.ReactNode }) {
   const [questions, setQuestionsState] = useState<Question[]>(() => loadQuestions());
   const [userId] = useState(() => generateUserId());
 
+  // Actualizar preguntas cuando cambien en localStorage
   useEffect(() => {
-    // Escuchar cambios en el almacenamiento
     const handleStorageChange = () => {
-      const newQuestions = loadQuestions();
-      setQuestionsState(newQuestions);
+      const loadedQuestions = loadQuestions();
+      setQuestionsState(loadedQuestions);
     };
 
-    // Escuchar eventos de storage y el evento personalizado
     window.addEventListener('storage', handleStorageChange);
-    window.addEventListener('questionsUpdated', handleStorageChange);
-
-    // Actualización periódica
+    
+    // Actualizar cada segundo
     const interval = setInterval(handleStorageChange, 1000);
 
     return () => {
       window.removeEventListener('storage', handleStorageChange);
-      window.removeEventListener('questionsUpdated', handleStorageChange);
       clearInterval(interval);
     };
   }, []);
