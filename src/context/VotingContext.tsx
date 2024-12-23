@@ -1,11 +1,13 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { STORAGE_KEYS, getStoredData, setStoredData } from '../utils/localStorage';
 
-interface VotingContextType {
+interface VotingState {
   options: string[];
   votes: number[];
   votingEnabled: boolean;
   hasVoted: boolean;
+}
+
+interface VotingContextType extends VotingState {
   setOptions: (options: string[]) => void;
   handleVote: (index: number) => void;
   toggleVoting: () => void;
@@ -13,44 +15,44 @@ interface VotingContextType {
 
 const VotingContext = createContext<VotingContextType | null>(null);
 
+const STORAGE_KEY = 'voting-state';
+
 export function VotingProvider({ children }: { children: React.ReactNode }) {
-  const [options, setOptions] = useState(() => 
-    getStoredData(STORAGE_KEYS.OPTIONS, ['', '', ''])
-  );
-  const [votes, setVotes] = useState(() => 
-    getStoredData(STORAGE_KEYS.VOTES, [0, 0, 0])
-  );
-  const [votingEnabled, setVotingEnabled] = useState(() => 
-    getStoredData(STORAGE_KEYS.VOTING_ENABLED, false)
-  );
-  const [hasVoted, setHasVoted] = useState(() => 
-    getStoredData(STORAGE_KEYS.HAS_VOTED, false)
-  );
+  const [state, setState] = useState<VotingState>(() => {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    return stored ? JSON.parse(stored) : {
+      options: ['', '', ''],
+      votes: [0, 0, 0],
+      votingEnabled: false,
+      hasVoted: false
+    };
+  });
 
   useEffect(() => {
-    setStoredData(STORAGE_KEYS.OPTIONS, options);
-    setStoredData(STORAGE_KEYS.VOTES, votes);
-    setStoredData(STORAGE_KEYS.VOTING_ENABLED, votingEnabled);
-    setStoredData(STORAGE_KEYS.HAS_VOTED, hasVoted);
-  }, [options, votes, votingEnabled, hasVoted]);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  }, [state]);
+
+  const setOptions = (options: string[]) => {
+    setState(prev => ({ ...prev, options }));
+  };
 
   const handleVote = (index: number) => {
-    if (!hasVoted && votingEnabled) {
-      setVotes(prev => prev.map((v, i) => i === index ? v + 1 : v));
-      setHasVoted(true);
+    if (!state.hasVoted && state.votingEnabled) {
+      setState(prev => ({
+        ...prev,
+        votes: prev.votes.map((v, i) => i === index ? v + 1 : v),
+        hasVoted: true
+      }));
     }
   };
 
   const toggleVoting = () => {
-    setVotingEnabled(prev => !prev);
+    setState(prev => ({ ...prev, votingEnabled: !prev.votingEnabled }));
   };
 
   return (
     <VotingContext.Provider value={{
-      options,
-      votes,
-      votingEnabled,
-      hasVoted,
+      ...state,
       setOptions,
       handleVote,
       toggleVoting
