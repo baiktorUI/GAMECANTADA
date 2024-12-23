@@ -4,7 +4,7 @@ import { useVoting } from '../context/VotingContext';
 import { Layout } from '../components/Layout';
 
 export function UserVotingPage() {
-  const { questions, handleVote, hasUserVoted } = useVoting();
+  const { questions, handleVote, hasVoted } = useVoting();
 
   if (!questions || questions.length === 0) {
     return (
@@ -15,21 +15,6 @@ export function UserVotingPage() {
           </p>
           <p className="text-white/70">
             Por favor, espera a que el administrador configure las opciones.
-          </p>
-        </div>
-      </Layout>
-    );
-  }
-
-  if (hasUserVoted()) {
-    return (
-      <Layout>
-        <div className="glass-panel text-center">
-          <h2 className="text-3xl font-bold text-white mb-4">
-            ¡Gracias por tu voto!
-          </h2>
-          <p className="text-white/70">
-            Tu voto ha sido registrado correctamente.
           </p>
         </div>
       </Layout>
@@ -50,10 +35,15 @@ export function UserVotingPage() {
                   key={`${question.id}-${idx}`}
                   option={option}
                   onVote={() => handleVote(question.id, idx)}
-                  disabled={hasUserVoted()}
+                  disabled={hasVoted(question.id)}
                 />
               ))}
             </div>
+            {hasVoted(question.id) && (
+              <p className="mt-4 text-white/70 text-center">
+                Gracias por tu voto
+              </p>
+            )}
           </div>
         ))}
       </div>

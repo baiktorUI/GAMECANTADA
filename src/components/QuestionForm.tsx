@@ -6,45 +6,42 @@ interface QuestionFormProps {
 }
 
 export function QuestionForm({ onSubmit }: QuestionFormProps) {
-  const [questions, setQuestions] = useState<Question[]>([
-    { id: 1, options: ['', '', ''], votes: [0, 0, 0] }
-  ]);
+  const [options, setOptions] = useState(['', '', '']);
 
-  const handleOptionChange = (questionId: number, optionIndex: number, value: string) => {
-    setQuestions(questions.map(q => 
-      q.id === questionId 
-        ? { ...q, options: q.options.map((opt, idx) => idx === optionIndex ? value : opt) }
-        : q
-    ));
+  const handleOptionChange = (index: number, value: string) => {
+    setOptions(prev => prev.map((opt, idx) => idx === index ? value : opt));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (questions.every(q => q.options.every(opt => opt))) {
-      onSubmit(questions);
+    if (options.every(opt => opt.trim())) {
+      const question: Question = {
+        id: Date.now(),
+        options: options.map(opt => opt.trim()),
+        votes: new Array(options.length).fill(0)
+      };
+      onSubmit([question]);
     }
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-8">
-      {questions.map((question) => (
-        <div key={`question-${question.id}`} className="glass-panel">
-          <h3 className="text-2xl font-bold text-white mb-6">Nom dels Finalistes</h3>
-          <div className="space-y-4">
-            {question.options.map((option, idx) => (
-              <input
-                key={`question-${question.id}-option-${idx}`}
-                type="text"
-                value={option}
-                onChange={(e) => handleOptionChange(question.id, idx, e.target.value)}
-                placeholder={`Finalista ${idx + 1}`}
-                className="input-field"
-                required
-              />
-            ))}
-          </div>
+      <div className="glass-panel">
+        <h3 className="text-2xl font-bold text-white mb-6">Nom dels Finalistes</h3>
+        <div className="space-y-4">
+          {options.map((option, idx) => (
+            <input
+              key={idx}
+              type="text"
+              value={option}
+              onChange={(e) => handleOptionChange(idx, e.target.value)}
+              placeholder={`Finalista ${idx + 1}`}
+              className="input-field"
+              required
+            />
+          ))}
         </div>
-      ))}
+      </div>
       
       <div className="flex justify-center">
         <button type="submit" className="btn-primary px-12 font-bold">

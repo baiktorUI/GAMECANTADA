@@ -1,27 +1,23 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { AdminPage } from './pages/AdminPage';
-import { UserVotingPage } from './pages/UserVotingPage';
-import { VotingProvider } from './context/VotingContext';
+import { AdminPanel } from './components/AdminPanel';
+import { UserPanel } from './components/UserPanel';
+import { useVoting } from './context/VotingContext';
 
 export default function App() {
+  const { isAdmin, setIsAdmin } = useVoting();
+
   return (
-    <VotingProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Navigate to="/admin" replace />} />
-          <Route path="/admin" element={<AdminPage />} />
-          <Route path="/votacio/guanyador" element={<UserVotingPage />} />
-          <Route path="*" element={
-            <div className="min-h-screen flex items-center justify-center bg-gray-900">
-              <div className="text-center text-white">
-                <h1 className="text-4xl font-bold mb-4">404</h1>
-                <p className="text-xl">Página no encontrada</p>
-              </div>
-            </div>
-          } />
-        </Routes>
-      </BrowserRouter>
-    </VotingProvider>
+    <div className="min-h-screen p-6" style={{ background: 'linear-gradient(135deg, #e03c0a, #0e487e, #020234)' }}>
+      <div className="max-w-4xl mx-auto">
+        <button 
+          onClick={() => setIsAdmin(!isAdmin)} 
+          className="btn-primary mb-8"
+        >
+          Cambiar a {isAdmin ? 'Usuario' : 'Admin'}
+        </button>
+        
+        {isAdmin ? <AdminPanel /> : <UserPanel />}
+      </div>
+    </div>
   );
 }

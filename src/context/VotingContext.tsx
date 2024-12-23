@@ -1,64 +1,67 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { loadQuestions, saveQuestions } from '../utils/storage';
-import { generateUserId } from '../utils/user';
-import type { Question } from '../types';
+import { STORAGE_KEYS, getStoredData, setStoredData } from '../utils/localStorage';
 
 interface VotingContextType {
-  questions: Question[];
-  setQuestions: (questions: Question[]) => void;
-  handleVote: (questionId: number, optionIndex: number) => void;
-  hasUserVoted: () => boolean;
+  options: string[];
+  votes: number[];
+  isAdmin: boolean;
+  votingEnabled: boolean;
+  hasVoted: boolean;
+  setIsAdmin: (value: boolean) => void;
+  setOptions: (options: string[]) => void;
+  handleVote: (index: number) => void;
+  toggleVoting: () => void;
 }
 
 const VotingContext = createContext<VotingContextType | null>(null);
 
 export function VotingProvider({ children }: { children: React.ReactNode }) {
-  const [questions, setQuestionsState] = useState<Question[]>(() => loadQuestions());
-  const userId = generateUserId();
+  const [options, setOptions] = useState(() => 
+    getStoredData(STORAGE_KEYS.OPTIONS, ['', '', ''])
+  );
+  const [votes, setVotes] = useState(() => 
+    getStoredData(STORAGE_KEYS.VOTES, [0, 0, 0])
+  );
+  const [isAdmin, setIsAdmin] = useState(() => 
+    getStoredData(STORAGE_KEYS.ADMIN, false)
+  );
+  const [votingEnabled, setVotingEnabled] = useState(() => 
+    getStoredData(STORAGE_KEYS.VOTING_ENABLED, false)
+  );
+  const [hasVoted, setHasVoted] = useState(() => 
+    getStoredData(STORAGE_KEYS.HAS_VOTED, false)
+  );
 
   useEffect(() => {
-    // Cargar preguntas iniciales
-    const storedQuestions = loadQuestions();
-    if (storedQuestions.length > 0) {
-      setQuestionsState(storedQuestions);
+    setStoredData(STORAGE_KEYS.OPTIONS, options);
+    setStoredData(STORAGE_KEYS.VOTES, votes);
+    setStoredData(STORAGE_KEYS.ADMIN, isAdmin);
+    setStoredData(STORAGE_KEYS.VOTING_ENABLED, votingEnabled);
+    setStoredData(STORAGE_KEYS.HAS_VOTED, hasVoted);
+  }, [options, votes, isAdmin, votingEnabled, hasVoted]);
+
+  const handleVote = (index: number) => {
+    if (!hasVoted && votingEnabled) {
+      setVotes(prev => prev.map((v, i) => i === index ? v + 1 : v));
+      setHasVoted(true);
     }
-
-    // Configurar actualizaciones periódicas
-    const interval = setInterval(() => {
-      const currentQuestions = loadQuestions();
-      if (JSON.stringify(currentQuestions) !== JSON.stringify(questions)) {
-        setQuestionsState(currentQuestions);
-      }
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  const setQuestions = (newQuestions: Question[]) => {
-    saveQuestions(newQuestions);
-    setQuestionsState(newQuestions);
   };
 
-  const handleVote = (questionId: number, optionIndex: number) => {
-    const updatedQuestions = questions.map(q => 
-      q.id === questionId
-        ? { ...q, votes: q.votes.map((v, i) => i === optionIndex ? v + 1 : v) }
-        : q
-    );
-    setQuestions(updatedQuestions);
-    localStorage.setItem(`vote-${userId}`, 'true');
-  };
-
-  const hasUserVoted = () => {
-    return localStorage.getItem(`vote-${userId}`) === 'true';
+  const toggleVoting = () => {
+    setVotingEnabled(prev => !prev);
   };
 
   return (
     <VotingContext.Provider value={{
-      questions,
-      setQuestions,
+      options,
+      votes,
+      isAdmin,
+      votingEnabled,
+      hasVoted,
+      setIsAdmin,
+      setOptions,
       handleVote,
-      hasUserVoted
+      toggleVoting
     }}>
       {children}
     </VotingContext.Provider>
