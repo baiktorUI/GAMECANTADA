@@ -11,7 +11,8 @@ const app = express();
 const server = createServer(app);
 const wss = new WebSocketServer({ 
   server,
-  path: '/ws'  // Especificar la ruta del WebSocket
+  path: '/ws',
+  clientTracking: true
 });
 
 // Estado inicial
@@ -21,13 +22,7 @@ const state = {
   votingEnabled: false
 };
 
-// Middleware para logging
-app.use((req, res, next) => {
-  console.log(`${req.method} ${req.url}`);
-  next();
-});
-
-// Configuración de CORS y JSON
+// Middleware
 app.use(express.json());
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
@@ -36,7 +31,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// Función para enviar actualizaciones
+// Broadcast del estado
 function broadcastState() {
   const message = JSON.stringify({
     type: 'STATE_UPDATE',
@@ -44,13 +39,13 @@ function broadcastState() {
   });
   
   wss.clients.forEach(client => {
-    if (client.readyState === 1) {
+    if (client.readyState === 1) { // WebSocket.OPEN
       client.send(message);
     }
   });
 }
 
-// Rutas API
+// API Routes
 app.get('/api/state', (req, res) => {
   res.json(state);
 });
@@ -68,31 +63,36 @@ app.post('/api/options', (req, res) => {
 
 app.post('/api/vote', (req, res) => {
   const { index } = req.body;
-  if (typeof index === 'number' && index >= 0 && index < 3 && state.votingEnabled) {
-    state.votes[index]++;
-    broadcastState();
-    res.json({ success: true });
-  } else {
-    res.status(400).json({ error: 'Voto inválido' });
+  if (!state.votingEnabled) {
+    return res.status(400).json({ error: 'Votación desactivada' });
   }
+  if (typeof index !== 'number' || index < 0 || index >= 3) {
+    return res.status(400).json({ error: 'Índice inválido' });
+  }
+  
+  state.votes[index]++;
+  broadcastState();
+  res.json({ success: true });
 });
 
 app.post('/api/toggle-voting', (req, res) => {
   state.votingEnabled = !state.votingEnabled;
   broadcastState();
-  res.json({ success: true });
+  res.json({ success: true, votingEnabled: state.votingEnabled });
 });
 
-// Conexiones WebSocket
+// WebSocket
 wss.on('connection', (ws) => {
-  console.log('New WebSocket connection');
+  console.log('Nueva conexión WebSocket');
   ws.send(JSON.stringify({
     type: 'STATE_UPDATE',
     ...state
   }));
+
+  ws.on('error', console.error);
 });
 
-// Iniciar servidor
+// Servidor
 const PORT = process.env.PORT || 3001;
 server.listen(PORT, () => {
   console.log(`Servidor ejecutándose en el puerto ${PORT}`);
