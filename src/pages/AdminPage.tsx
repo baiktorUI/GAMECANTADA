@@ -3,7 +3,7 @@ import { QuestionForm } from '../components/QuestionForm';
 import { AdminDashboard } from './AdminDashboard';
 import { useVoting } from '../context/VotingContext';
 import { Layout } from '../components/Layout';
-import { setAdminStatus } from '../utils/storage';
+import { setAdminStatus } from '../utils/admin';
 import type { Question } from '../types';
 
 export function AdminPage() {
@@ -11,7 +11,6 @@ export function AdminPage() {
   const { setQuestions } = useVoting();
 
   useEffect(() => {
-    // Marcar esta sesión como admin
     setAdminStatus(true);
   }, []);
 

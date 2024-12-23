@@ -1,15 +1,16 @@
-// Simulación de almacenamiento persistente usando localStorage
+import type { Question } from '../types';
+
 const STORAGE_KEY = 'voting-questions';
-const ADMIN_KEY = 'is-admin';
+const VOTES_KEY = 'voting-votes';
 
 export function saveQuestions(questions: Question[]): void {
   try {
-    // Asegurarse de que solo el admin puede guardar preguntas
-    if (localStorage.getItem(ADMIN_KEY) === 'true') {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(questions));
-      // Sincronizar con sessionStorage para redundancia
-      sessionStorage.setItem(STORAGE_KEY, JSON.stringify(questions));
-    }
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(questions));
+    // Broadcast el cambio a otras pestañas
+    window.dispatchEvent(new StorageEvent('storage', {
+      key: STORAGE_KEY,
+      newValue: JSON.stringify(questions)
+    }));
   } catch (error) {
     console.error('Error saving questions:', error);
   }
@@ -17,27 +18,35 @@ export function saveQuestions(questions: Question[]): void {
 
 export function loadQuestions(): Question[] {
   try {
-    // Intentar cargar desde localStorage primero
     const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored) {
-      return JSON.parse(stored);
-    }
-    
-    // Si no hay datos en localStorage, intentar desde sessionStorage
-    const sessionStored = sessionStorage.getItem(STORAGE_KEY);
-    if (sessionStored) {
-      // Sincronizar con localStorage
-      localStorage.setItem(STORAGE_KEY, sessionStored);
-      return JSON.parse(sessionStored);
-    }
-    
-    return [];
+    return stored ? JSON.parse(stored) : [];
   } catch (error) {
     console.error('Error loading questions:', error);
     return [];
   }
 }
 
-export function setAdminStatus(isAdmin: boolean): void {
-  localStorage.setItem(ADMIN_KEY, String(isAdmin));
+export function saveVote(userId: string, questionId: number): void {
+  try {
+    const votes = getVotes();
+    votes[userId] = questionId;
+    localStorage.setItem(VOTES_KEY, JSON.stringify(votes));
+  } catch (error) {
+    console.error('Error saving vote:', error);
+  }
+}
+
+export function getVotes(): Record<string, number> {
+  try {
+    const stored = localStorage.getItem(VOTES_KEY);
+    return stored ? JSON.parse(stored) : {};
+  } catch (error) {
+    console.error('Error loading votes:', error);
+    return {};
+  }
+}
+
+export function hasVoted(userId: string): boolean {
+  const votes = getVotes();
+  return userId in votes;
 }

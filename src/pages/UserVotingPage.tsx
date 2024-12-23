@@ -1,33 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { VoteOption } from '../components/VoteOption';
 import { useVoting } from '../context/VotingContext';
 import { Layout } from '../components/Layout';
-import { 
-  getCurrentSessionId, 
-  hasUserVotedInSession, 
-  markUserAsVotedInSession 
-} from '../utils/voteTracking';
 
 export function UserVotingPage() {
-  const { questions, handleVote } = useVoting();
-  const [hasVoted, setHasVoted] = useState(false);
-  const [sessionId, setSessionId] = useState<string>('');
-
-  useEffect(() => {
-    if (questions && questions.length > 0) {
-      const currentSessionId = getCurrentSessionId(questions[0].options);
-      setSessionId(currentSessionId);
-      setHasVoted(hasUserVotedInSession(currentSessionId));
-    }
-  }, [questions]);
-
-  const handleVoteClick = (questionId: number, idx: number) => {
-    if (!hasUserVotedInSession(sessionId)) {
-      handleVote(questionId, idx);
-      markUserAsVotedInSession(sessionId);
-      setHasVoted(true);
-    }
-  };
+  const { questions, handleVote, hasUserVoted } = useVoting();
 
   if (!questions || questions.length === 0) {
     return (
@@ -44,7 +21,7 @@ export function UserVotingPage() {
     );
   }
 
-  if (hasVoted) {
+  if (hasUserVoted()) {
     return (
       <Layout>
         <div className="glass-panel text-center">
@@ -72,8 +49,8 @@ export function UserVotingPage() {
                 <VoteOption
                   key={`${question.id}-${idx}`}
                   option={option}
-                  onVote={() => handleVoteClick(question.id, idx)}
-                  disabled={hasVoted}
+                  onVote={() => handleVote(question.id, idx)}
+                  disabled={hasUserVoted()}
                 />
               ))}
             </div>
