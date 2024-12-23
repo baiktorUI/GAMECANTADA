@@ -23,20 +23,21 @@ export function AdminPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-600 via-blue-800 to-blue-950">
+    <div className="min-h-screen bg-gradient-to-br from-orange-600 via-blue-800 to-blue-950 p-4">
       <div className="container mx-auto px-4 py-8 max-w-2xl">
         <div className="glass-panel mb-8">
           <h1 className="text-3xl font-bold text-white mb-6">Panel de Administración</h1>
           <div className="space-y-4">
             {options.map((option, index) => (
-              <input
-                key={index}
-                type="text"
-                value={option}
-                onChange={(e) => handleOptionChange(index, e.target.value)}
-                placeholder={`Opción ${index + 1}`}
-                className="input-field"
-              />
+              <div key={index} className="relative">
+                <input
+                  type="text"
+                  value={option}
+                  onChange={(e) => handleOptionChange(index, e.target.value)}
+                  placeholder={`Opción ${index + 1}`}
+                  className="input-field w-full text-white"
+                />
+              </div>
             ))}
             <button 
               onClick={toggleVoting}
@@ -55,7 +56,7 @@ export function AdminPage() {
             <div className="flex-1">
               <h2 className="text-xl font-bold text-white">Enlace para votar</h2>
               <div className="flex items-center gap-2 mt-2">
-                <code className="text-white/70 flex-1">{votingUrl}</code>
+                <code className="text-white/70 flex-1 break-all bg-black/20 p-2 rounded">{votingUrl}</code>
                 <button 
                   onClick={copyVotingUrl}
                   className="btn-primary px-4 py-2"

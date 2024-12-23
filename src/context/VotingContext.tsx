@@ -17,14 +17,6 @@ interface VotingContextType extends VotingState {
 
 const VotingContext = createContext<VotingContextType | null>(null);
 
-export function useVoting() {
-  const context = useContext(VotingContext);
-  if (!context) {
-    throw new Error('useVoting must be used within a VotingProvider');
-  }
-  return context;
-}
-
 export function VotingProvider({ children }: { children: React.ReactNode }) {
   const [state, setState] = useState<VotingState>({
     options: ['', '', ''],
@@ -34,6 +26,20 @@ export function VotingProvider({ children }: { children: React.ReactNode }) {
   });
 
   useEffect(() => {
+    // Cargar estado inicial
+    fetch('/api/state')
+      .then(res => res.json())
+      .then(data => {
+        setState(prev => ({
+          ...prev,
+          options: data.options,
+          votes: data.votes,
+          votingEnabled: data.votingEnabled
+        }));
+      })
+      .catch(console.error);
+
+    // Conectar WebSocket
     votingWebSocket.connect((data) => {
       setState(prev => ({
         ...prev,
@@ -43,28 +49,33 @@ export function VotingProvider({ children }: { children: React.ReactNode }) {
       }));
     });
 
-    return () => {
-      votingWebSocket.disconnect();
-    };
+    return () => votingWebSocket.disconnect();
   }, []);
 
   const setOptions = async (newOptions: string[]) => {
     try {
-      await fetch('/api/options', {
+      const response = await fetch('/api/options', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ options: newOptions })
       });
+      
+      if (!response.ok) throw new Error('Error al actualizar opciones');
     } catch (error) {
-      console.error('Error updating options:', error);
+      console.error('Error:', error);
     }
   };
 
   const toggleVoting = async () => {
     try {
-      await fetch('/api/toggle-voting', { method: 'POST' });
+      const response = await fetch('/api/toggle-voting', { 
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      });
+      
+      if (!response.ok) throw new Error('Error al cambiar estado de votación');
     } catch (error) {
-      console.error('Error toggling voting:', error);
+      console.error('Error:', error);
     }
   };
 
@@ -83,7 +94,7 @@ export function VotingProvider({ children }: { children: React.ReactNode }) {
         setStoredData(STORAGE_KEYS.HAS_VOTED, true);
       }
     } catch (error) {
-      console.error('Error voting:', error);
+      console.error('Error:', error);
     }
   };
 
@@ -92,4 +103,12 @@ export function VotingProvider({ children }: { children: React.ReactNode }) {
       {children}
     </VotingContext.Provider>
   );
+}
+
+export function useVoting() {
+  const context = useContext(VotingContext);
+  if (!context) {
+    throw new Error('useVoting debe usarse dentro de VotingProvider');
+  }
+  return context;
 }

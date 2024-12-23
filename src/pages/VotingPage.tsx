@@ -7,16 +7,16 @@ export function VotingPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-600 via-blue-800 to-blue-950 p-4">
-      <div className="max-w-md mx-auto">
+      <div className="max-w-md mx-auto pt-8">
         {!votingEnabled ? (
           <div className="glass-panel text-center">
             <Lock className="w-12 h-12 text-white/50 mx-auto mb-4" />
-            <p className="text-white/70">La votación no está activa</p>
+            <p className="text-white/70">La votación no está activa en este momento</p>
           </div>
         ) : hasVoted ? (
           <div className="glass-panel text-center">
             <h2 className="text-2xl font-bold text-white mb-4">¡Gracias por tu voto!</h2>
-            <p className="text-white/70">Tu voto ha sido registrado</p>
+            <p className="text-white/70">Tu voto ha sido registrado correctamente</p>
           </div>
         ) : (
           <div className="glass-panel">

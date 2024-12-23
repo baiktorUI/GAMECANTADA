@@ -6,22 +6,26 @@ export default defineConfig({
   server: {
     port: 3000,
     proxy: {
-      '/api': 'http://localhost:3001',
-      '/socket.io': {
+      '/api': {
         target: 'http://localhost:3001',
+        changeOrigin: true
+      },
+      '/ws': {
+        target: 'ws://localhost:3001',
         ws: true
       }
     }
   },
-  build: {
-    outDir: 'dist',
-    sourcemap: true,
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom', 'react-router-dom'],
-          charts: ['recharts']
-        }
+  preview: {
+    port: 3000,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3001',
+        changeOrigin: true
+      },
+      '/ws': {
+        target: 'ws://localhost:3001',
+        ws: true
       }
     }
   }
