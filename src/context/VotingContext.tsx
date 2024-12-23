@@ -4,10 +4,8 @@ import { STORAGE_KEYS, getStoredData, setStoredData } from '../utils/localStorag
 interface VotingContextType {
   options: string[];
   votes: number[];
-  isAdmin: boolean;
   votingEnabled: boolean;
   hasVoted: boolean;
-  setIsAdmin: (value: boolean) => void;
   setOptions: (options: string[]) => void;
   handleVote: (index: number) => void;
   toggleVoting: () => void;
@@ -22,9 +20,6 @@ export function VotingProvider({ children }: { children: React.ReactNode }) {
   const [votes, setVotes] = useState(() => 
     getStoredData(STORAGE_KEYS.VOTES, [0, 0, 0])
   );
-  const [isAdmin, setIsAdmin] = useState(() => 
-    getStoredData(STORAGE_KEYS.ADMIN, false)
-  );
   const [votingEnabled, setVotingEnabled] = useState(() => 
     getStoredData(STORAGE_KEYS.VOTING_ENABLED, false)
   );
@@ -35,10 +30,9 @@ export function VotingProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     setStoredData(STORAGE_KEYS.OPTIONS, options);
     setStoredData(STORAGE_KEYS.VOTES, votes);
-    setStoredData(STORAGE_KEYS.ADMIN, isAdmin);
     setStoredData(STORAGE_KEYS.VOTING_ENABLED, votingEnabled);
     setStoredData(STORAGE_KEYS.HAS_VOTED, hasVoted);
-  }, [options, votes, isAdmin, votingEnabled, hasVoted]);
+  }, [options, votes, votingEnabled, hasVoted]);
 
   const handleVote = (index: number) => {
     if (!hasVoted && votingEnabled) {
@@ -55,10 +49,8 @@ export function VotingProvider({ children }: { children: React.ReactNode }) {
     <VotingContext.Provider value={{
       options,
       votes,
-      isAdmin,
       votingEnabled,
       hasVoted,
-      setIsAdmin,
       setOptions,
       handleVote,
       toggleVoting

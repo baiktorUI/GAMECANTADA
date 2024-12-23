@@ -1,6 +1,7 @@
 import React from 'react';
 import { useVoting } from '../context/VotingContext';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts';
+import { Share } from 'lucide-react';
 
 export function AdminPanel() {
   const { 
@@ -20,6 +21,17 @@ export function AdminPanel() {
     votos: votes[index]
   }));
 
+  const votingUrl = `${window.location.origin}/votacio`;
+
+  const copyVotingUrl = async () => {
+    try {
+      await navigator.clipboard.writeText(votingUrl);
+      alert('URL copiada al portapapeles');
+    } catch (err) {
+      console.error('Error al copiar:', err);
+    }
+  };
+
   return (
     <div className="space-y-8">
       <div className="glass-panel">
@@ -36,10 +48,28 @@ export function AdminPanel() {
           ))}
           <button 
             onClick={toggleVoting}
-            className={`btn-primary w-full ${votingEnabled ? 'bg-red-500' : 'bg-green-500'}`}
+            className={`btn-primary w-full ${votingEnabled ? 'bg-red-500/20' : 'bg-green-500/20'}`}
           >
             {votingEnabled ? 'Detener Votación' : 'Iniciar Votación'}
           </button>
+        </div>
+      </div>
+
+      <div className="glass-panel">
+        <div className="flex items-center gap-4 mb-6">
+          <Share className="text-white" size={24} />
+          <div className="flex-1">
+            <h3 className="text-xl font-bold text-white">Enlace para votar</h3>
+            <div className="flex items-center gap-2 mt-2">
+              <code className="text-white/70 flex-1">{votingUrl}</code>
+              <button 
+                onClick={copyVotingUrl}
+                className="btn-primary px-4 py-2"
+              >
+                Copiar
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 

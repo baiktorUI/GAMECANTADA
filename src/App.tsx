@@ -1,23 +1,42 @@
 import React from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AdminPanel } from './components/AdminPanel';
 import { UserPanel } from './components/UserPanel';
-import { useVoting } from './context/VotingContext';
+import { Layout } from './components/Layout';
 
 export default function App() {
-  const { isAdmin, setIsAdmin } = useVoting();
-
   return (
-    <div className="min-h-screen p-6" style={{ background: 'linear-gradient(135deg, #e03c0a, #0e487e, #020234)' }}>
-      <div className="max-w-4xl mx-auto">
-        <button 
-          onClick={() => setIsAdmin(!isAdmin)} 
-          className="btn-primary mb-8"
-        >
-          Cambiar a {isAdmin ? 'Usuario' : 'Admin'}
-        </button>
-        
-        {isAdmin ? <AdminPanel /> : <UserPanel />}
-      </div>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Navigate to="/votacio" replace />} />
+        <Route 
+          path="/admin" 
+          element={
+            <Layout>
+              <AdminPanel />
+            </Layout>
+          } 
+        />
+        <Route 
+          path="/votacio" 
+          element={
+            <Layout>
+              <UserPanel />
+            </Layout>
+          } 
+        />
+        <Route 
+          path="*" 
+          element={
+            <Layout>
+              <div className="glass-panel text-center">
+                <h2 className="text-2xl font-bold text-white mb-4">404</h2>
+                <p className="text-white/70">Página no encontrada</p>
+              </div>
+            </Layout>
+          } 
+        />
+      </Routes>
+    </BrowserRouter>
   );
 }
