@@ -2,10 +2,10 @@ class VotingWebSocket {
   private ws: WebSocket | null = null;
   private reconnectAttempts = 0;
   private maxReconnectAttempts = 5;
-  private onVoteUpdate: ((votes: number[]) => void) | null = null;
+  private onStateUpdate: ((state: any) => void) | null = null;
 
-  connect(onVoteUpdate: (votes: number[]) => void) {
-    this.onVoteUpdate = onVoteUpdate;
+  connect(onStateUpdate: (state: any) => void) {
+    this.onStateUpdate = onStateUpdate;
     this.establishConnection();
   }
 
@@ -24,8 +24,12 @@ class VotingWebSocket {
       this.ws.onmessage = (event) => {
         try {
           const data = JSON.parse(event.data);
-          if (data.type === 'STATE_UPDATE' && this.onVoteUpdate) {
-            this.onVoteUpdate(data.votes);
+          if (data.type === 'STATE_UPDATE' && this.onStateUpdate) {
+            this.onStateUpdate({
+              votes: data.votes,
+              options: data.options,
+              votingEnabled: data.votingEnabled
+            });
           }
         } catch (err) {
           console.error('Error parsing WebSocket message:', err);
