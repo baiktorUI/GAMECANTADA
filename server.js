@@ -27,6 +27,9 @@ app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Content-Type');
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200);
+  }
   next();
 });
 
@@ -46,10 +49,12 @@ function broadcastState() {
 
 // API Routes
 app.get('/api/state', (req, res) => {
+  console.log('GET /api/state', state);
   res.json(state);
 });
 
 app.post('/api/options', (req, res) => {
+  console.log('POST /api/options', req.body);
   const { options } = req.body;
   if (Array.isArray(options) && options.length === 3) {
     state.options = options;
@@ -61,6 +66,7 @@ app.post('/api/options', (req, res) => {
 });
 
 app.post('/api/vote', (req, res) => {
+  console.log('POST /api/vote', req.body);
   const { index } = req.body;
   if (!state.votingEnabled) {
     return res.status(400).json({ error: 'Votación desactivada' });
@@ -75,6 +81,7 @@ app.post('/api/vote', (req, res) => {
 });
 
 app.post('/api/toggle-voting', (req, res) => {
+  console.log('POST /api/toggle-voting');
   state.votingEnabled = !state.votingEnabled;
   broadcastState();
   res.json({ success: true, votingEnabled: state.votingEnabled });
@@ -88,6 +95,14 @@ wss.on('connection', (ws) => {
     ...state
   }));
 });
+
+// Servir archivos estáticos en producción
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static('dist'));
+  app.get('*', (req, res) => {
+    res.sendFile(join(__dirname, 'dist', 'index.html'));
+  });
+}
 
 // Servidor
 const PORT = process.env.PORT || 3001;

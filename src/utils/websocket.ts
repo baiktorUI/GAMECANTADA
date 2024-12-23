@@ -16,15 +16,16 @@ class VotingWebSocket {
     }
 
     try {
-      // Usar la URL relativa para que funcione en desarrollo y producción
       const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
       const wsUrl = `${wsProtocol}//${window.location.host}/ws`;
       
+      console.log('Connecting to WebSocket:', wsUrl);
       this.ws = new WebSocket(wsUrl);
 
       this.ws.onmessage = (event) => {
         try {
           const data = JSON.parse(event.data);
+          console.log('WebSocket message received:', data);
           if (data.type === 'STATE_UPDATE' && this.onStateUpdate) {
             this.onStateUpdate({
               votes: data.votes,
@@ -38,7 +39,7 @@ class VotingWebSocket {
       };
 
       this.ws.onopen = () => {
-        console.log('WebSocket connected');
+        console.log('WebSocket connected successfully');
         this.reconnectAttempts = 0;
       };
 
@@ -53,6 +54,7 @@ class VotingWebSocket {
       };
     } catch (err) {
       console.error('Error establishing WebSocket connection:', err);
+      setTimeout(() => this.establishConnection(), 2000);
     }
   }
 
