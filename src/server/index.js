@@ -1,6 +1,9 @@
 import { WebSocketServer } from 'ws';
+import { createServer } from 'http';
 
-const wss = new WebSocketServer({ port: 8080 });
+const PORT = 8080;
+const server = createServer();
+const wss = new WebSocketServer({ server });
 
 let votingState = {
   isActive: false,
@@ -13,44 +16,60 @@ let votingState = {
 
 const broadcast = (message) => {
   wss.clients.forEach((client) => {
-    client.send(JSON.stringify(message));
+    if (client.readyState === 1) { // WebSocket.OPEN
+      client.send(JSON.stringify(message));
+    }
   });
 };
 
 wss.on('connection', (ws) => {
+  console.log('Client connected');
+  
   // Send current state to new client
   ws.send(JSON.stringify({ type: 'STATE_UPDATE', payload: votingState }));
 
   ws.on('message', (data) => {
-    const message = JSON.parse(data);
+    try {
+      const message = JSON.parse(data);
 
-    switch (message.type) {
-      case 'TOGGLE_VOTING':
-        votingState.isActive = !votingState.isActive;
-        if (!votingState.isActive) {
-          votingState.options = votingState.options.map(opt => ({ ...opt, votes: 0 }));
-        }
-        break;
-
-      case 'VOTE':
-        if (votingState.isActive) {
-          const option = votingState.options.find(opt => opt.id === message.payload);
-          if (option) {
-            option.votes += 1;
+      switch (message.type) {
+        case 'TOGGLE_VOTING':
+          votingState.isActive = !votingState.isActive;
+          if (!votingState.isActive) {
+            votingState.options = votingState.options.map(opt => ({ ...opt, votes: 0 }));
           }
-        }
-        break;
+          break;
 
-      case 'CHANGE_NAME':
-        if (!votingState.isActive) {
-          const option = votingState.options.find(opt => opt.id === message.payload.id);
-          if (option) {
-            option.name = message.payload.name;
+        case 'VOTE':
+          if (votingState.isActive) {
+            const option = votingState.options.find(opt => opt.id === message.payload);
+            if (option) {
+              option.votes += 1;
+            }
           }
-        }
-        break;
+          break;
+
+        case 'CHANGE_NAME':
+          if (!votingState.isActive) {
+            const option = votingState.options.find(opt => opt.id === message.payload.id);
+            if (option) {
+              option.name = message.payload.name;
+            }
+          }
+          break;
+      }
+
+      broadcast({ type: 'STATE_UPDATE', payload: votingState });
+    } catch (error) {
+      console.error('Error processing message:', error);
     }
-
-    broadcast({ type: 'STATE_UPDATE', payload: votingState });
   });
+
+  ws.on('close', () => {
+    console.log('Client disconnected');
+  });
+});
+
+server.listen(PORT, () => {
+  console.log(`WebSocket server is running on port ${PORT}`);
 });

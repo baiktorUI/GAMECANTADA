@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
 import { useWebSocket } from '../hooks/useWebSocket';
+import { getWebSocketUrl } from '../config/websocket';
 
 interface VotingOption {
   id: string;
@@ -37,7 +38,7 @@ export function VotingProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  const { sendMessage } = useWebSocket('ws://localhost:8080', handleMessage);
+  const { sendMessage } = useWebSocket(getWebSocketUrl(), handleMessage);
 
   const toggleVoting = () => {
     sendMessage({ type: 'TOGGLE_VOTING' });
