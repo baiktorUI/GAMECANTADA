@@ -1,9 +1,6 @@
 import { WebSocketServer } from 'ws';
-import { createServer } from 'http';
 
-const PORT = 8080;
-const server = createServer();
-const wss = new WebSocketServer({ server });
+const wss = new WebSocketServer({ port: 8080 });
 
 let votingState = {
   isActive: false,
@@ -16,7 +13,7 @@ let votingState = {
 
 const broadcast = (message) => {
   wss.clients.forEach((client) => {
-    if (client.readyState === 1) { // WebSocket.OPEN
+    if (client.readyState === WebSocket.OPEN) {
       client.send(JSON.stringify(message));
     }
   });
@@ -25,7 +22,7 @@ const broadcast = (message) => {
 wss.on('connection', (ws) => {
   console.log('Client connected');
   
-  // Send current state to new client
+  // Send initial state
   ws.send(JSON.stringify({ type: 'STATE_UPDATE', payload: votingState }));
 
   ws.on('message', (data) => {
@@ -64,12 +61,6 @@ wss.on('connection', (ws) => {
       console.error('Error processing message:', error);
     }
   });
-
-  ws.on('close', () => {
-    console.log('Client disconnected');
-  });
 });
 
-server.listen(PORT, () => {
-  console.log(`WebSocket server is running on port ${PORT}`);
-});
+console.log('WebSocket server running on port 8080');

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useCallback } from 'react';
+import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import { useWebSocket } from '../hooks/useWebSocket';
 import { getWebSocketUrl } from '../config/websocket';
 
@@ -29,6 +29,7 @@ export function VotingProvider({ children }: { children: React.ReactNode }) {
   ]);
 
   const handleMessage = useCallback((data: any) => {
+    console.log('Processing message in VotingContext:', data);
     if (data.type === 'STATE_UPDATE') {
       setIsVotingActive(data.payload.isActive);
       setOptions(data.payload.options);
@@ -40,20 +41,29 @@ export function VotingProvider({ children }: { children: React.ReactNode }) {
 
   const { sendMessage } = useWebSocket(getWebSocketUrl(), handleMessage);
 
-  const toggleVoting = () => {
+  const toggleVoting = useCallback(() => {
+    console.log('Toggling voting...');
     sendMessage({ type: 'TOGGLE_VOTING' });
-  };
+  }, [sendMessage]);
 
-  const handleVote = (optionId: string) => {
-    if (!isVotingActive || hasVoted) return;
+  const handleVote = useCallback((optionId: string) => {
+    if (!isVotingActive || hasVoted) {
+      console.log('Vote rejected:', { isVotingActive, hasVoted });
+      return;
+    }
+    console.log('Sending vote for option:', optionId);
     sendMessage({ type: 'VOTE', payload: optionId });
     setHasVoted(true);
-  };
+  }, [isVotingActive, hasVoted, sendMessage]);
 
-  const handleNameChange = (optionId: string, newName: string) => {
-    if (isVotingActive) return;
+  const handleNameChange = useCallback((optionId: string, newName: string) => {
+    if (isVotingActive) {
+      console.log('Name change rejected: voting is active');
+      return;
+    }
+    console.log('Changing name for option:', optionId, newName);
     sendMessage({ type: 'CHANGE_NAME', payload: { id: optionId, name: newName } });
-  };
+  }, [isVotingActive, sendMessage]);
 
   return (
     <VotingContext.Provider value={{
