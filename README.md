@@ -1,14 +1,13 @@
 # Voting App
 
-This is a simple voting application built with React. It supports real-time updates using Firebase and displays results in a chart.
+This is a simple voting application built with React.
 
 ## Features
 - Three voting options
-- Real-time updates via Firebase
-- Restricts users to a single vote
-- Live results chart
+- Local state management with `localStorage`
+- Live results chart using `react-chartjs-2`
 
-## Installation
+## Setup Instructions
 1. Clone the repository:
    ```bash
    git clone <repo_url>
@@ -24,7 +23,7 @@ This is a simple voting application built with React. It supports real-time upda
    ```
 
 ## Deployment
-This app is preconfigured for Vercel deployment. Ensure your Firebase credentials are correctly configured in `src/firebase.js` before deploying.
+- Deployable on Vercel using default settings.
 
 ## License
 This project is licensed under the MIT License.

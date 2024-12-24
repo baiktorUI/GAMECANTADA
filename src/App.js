@@ -1,27 +1,27 @@
 import React, { useState, useEffect } from "react";
 import Voting from "./components/Voting";
 import ResultsChart from "./components/ResultsChart";
-import { database, ref, set, update, onValue } from "./firebase";
 
 const App = () => {
   const [votingActive, setVotingActive] = useState(false);
-  const [userVoted, setUserVoted] = useState(false);
-  const [votes, setVotes] = useState({ option1: 0, option2: 0, option3: 0 });
+  const [votes, setVotes] = useState(
+    JSON.parse(localStorage.getItem("votes")) || { option1: 0, option2: 0, option3: 0 }
+  );
+  const [userVoted, setUserVoted] = useState(
+    JSON.parse(localStorage.getItem("userVoted")) || false
+  );
 
   useEffect(() => {
-    const votesRef = ref(database, "votes/");
-    onValue(votesRef, (snapshot) => {
-      if (snapshot.exists()) {
-        setVotes(snapshot.val());
-      }
-    });
-  }, []);
+    // Guardar estado en localStorage
+    localStorage.setItem("votes", JSON.stringify(votes));
+    localStorage.setItem("userVoted", JSON.stringify(userVoted));
+  }, [votes, userVoted]);
 
   const toggleVoting = () => {
     setVotingActive((prev) => !prev);
     if (!votingActive) {
-      // Reiniciar los votos
-      set(ref(database, "votes/"), { option1: 0, option2: 0, option3: 0 });
+      setVotes({ option1: 0, option2: 0, option3: 0 });
+      setUserVoted(false);
     }
   };
 
@@ -33,6 +33,8 @@ const App = () => {
       </button>
       <Voting
         votingActive={votingActive}
+        votes={votes}
+        setVotes={setVotes}
         userVoted={userVoted}
         setUserVoted={setUserVoted}
       />

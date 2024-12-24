@@ -1,23 +1,13 @@
-import React, { useState, useEffect } from "react";
-import { database, ref, update, onValue } from "../firebase";
+import React from "react";
 
-const Voting = ({ votingActive, userVoted, setUserVoted }) => {
-  const [votes, setVotes] = useState({ option1: 0, option2: 0, option3: 0 });
-
-  useEffect(() => {
-    const votesRef = ref(database, "votes/");
-    onValue(votesRef, (snapshot) => {
-      if (snapshot.exists()) {
-        setVotes(snapshot.val());
-      }
-    });
-  }, []);
-
+const Voting = ({ votingActive, votes, setVotes, userVoted, setUserVoted }) => {
   const handleVote = (option) => {
     if (!votingActive || userVoted) return;
 
-    const optionRef = ref(database, `votes/${option}`);
-    update(optionRef, { ".value": votes[option] + 1 });
+    setVotes((prevVotes) => ({
+      ...prevVotes,
+      [option]: prevVotes[option] + 1,
+    }));
     setUserVoted(true);
   };
 
