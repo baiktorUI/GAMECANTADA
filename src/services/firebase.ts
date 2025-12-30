@@ -5,6 +5,7 @@ import { getDatabase, ref, set, onValue, update, get } from 'firebase/database';
 const firebaseConfig = {
   apiKey: "AIzaSyBdohdA_H2QLDYLrWbcVlNoZwvTgRQFuT8",
   authDomain: "gamecantada.firebaseapp.com",
+  databaseURL: "https://gamecantada-default-rtdb.europe-west1.firebasedatabase.app/",
   projectId: "gamecantada",
   storageBucket: "gamecantada.firebasestorage.app",
   messagingSenderId: "929846057348",
