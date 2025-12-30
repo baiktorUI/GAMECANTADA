@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import type { VotingState } from '../types/voting';
 
 interface VotingScreenProps {
@@ -10,11 +10,37 @@ export const VotingScreen: React.FC<VotingScreenProps> = ({ votingState, onVote 
   const [hasVoted, setHasVoted] = useState(false);
   const [selectedTeam, setSelectedTeam] = useState<'blau' | 'taronja' | null>(null);
 
+  // Comprobar si ya ha votado al cargar
+  useEffect(() => {
+    const voted = localStorage.getItem('hasVoted');
+    const team = localStorage.getItem('votedTeam') as 'blau' | 'taronja' | null;
+    
+    if (voted === 'true' && team) {
+      setHasVoted(true);
+      setSelectedTeam(team);
+    }
+  }, []);
+
+  // Resetear voto cuando se resetea la votación
+  useEffect(() => {
+    if (!votingState.isActive && !votingState.hasEnded) {
+      localStorage.removeItem('hasVoted');
+      localStorage.removeItem('votedTeam');
+      setHasVoted(false);
+      setSelectedTeam(null);
+    }
+  }, [votingState.isActive, votingState.hasEnded]);
+
   const handleVote = (team: 'blau' | 'taronja') => {
     if (hasVoted) return;
     
     setSelectedTeam(team);
     setHasVoted(true);
+    
+    // Guardar en localStorage para evitar votos repetidos
+    localStorage.setItem('hasVoted', 'true');
+    localStorage.setItem('votedTeam', team);
+    
     onVote(team);
   };
 
