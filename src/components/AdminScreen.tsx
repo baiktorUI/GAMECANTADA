@@ -26,6 +26,17 @@ export const AdminScreen: React.FC<AdminScreenProps> = ({
   // URL para votar (cambiar por tu URL de Vercel)
   const votingUrl = window.location.origin + window.location.pathname;
 
+  // Reset automático al recargar la página admin
+  useEffect(() => {
+    const hasReloaded = sessionStorage.getItem('adminReloaded');
+    
+    if (!hasReloaded) {
+      // Primera carga: resetear todo
+      sessionStorage.setItem('adminReloaded', 'true');
+      onResetVoting();
+    }
+  }, [onResetVoting]);
+
   // Cuenta atrás de 60 segundos
   useEffect(() => {
     if (votingState.isActive && !showFinalCountdown) {
