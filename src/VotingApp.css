@@ -31,16 +31,20 @@
 
 .qr-container {
   background: white;
-  padding: 2vh;
-  border-radius: 20px;
-  display: inline-block;
-  margin-bottom: 2vh;
+  padding: 4vh;
+  border-radius: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 2vh auto;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  width: fit-content;
 }
 
 .qr-container svg {
-  width: clamp(180px, 25vh, 250px) !important;
-  height: clamp(180px, 25vh, 250px) !important;
+  width: clamp(300px, 45vh, 500px) !important;
+  height: clamp(300px, 45vh, 500px) !important;
+  display: block;
 }
 
 .voting-url {
