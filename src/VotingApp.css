@@ -3,63 +3,75 @@
 /* Pantalla QR */
 .admin-container {
   background: rgba(255, 255, 255, 0.15);
-  border-radius: 24px;
-  padding: 60px 80px;
-  width: 100%;
-  max-width: 900px;
+  border-radius: 20px;
+  padding: 2vh 4vw;
+  width: 90%;
+  max-width: 800px;
   text-align: center;
+  max-height: 92vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
 }
 
 .admin-title {
-  font-size: 56px;
+  font-size: clamp(28px, 4vh, 40px);
   font-weight: bold;
   color: #FFD700;
-  margin-bottom: 20px;
+  margin-bottom: 1vh;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .admin-subtitle {
-  font-size: 22px;
+  font-size: clamp(14px, 2vh, 18px);
   color: rgba(255, 255, 255, 0.9);
-  margin-bottom: 50px;
+  margin-bottom: 2vh;
 }
 
 .qr-container {
   background: white;
-  padding: 40px;
-  border-radius: 24px;
+  padding: 2vh;
+  border-radius: 20px;
   display: inline-block;
-  margin-bottom: 40px;
+  margin-bottom: 2vh;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
+.qr-container svg {
+  width: clamp(180px, 25vh, 250px) !important;
+  height: clamp(180px, 25vh, 250px) !important;
+}
+
 .voting-url {
-  margin-bottom: 40px;
+  margin-bottom: 2vh;
 }
 
 .url-label {
-  font-size: 18px;
+  font-size: clamp(12px, 1.6vh, 15px);
   color: rgba(255, 255, 255, 0.7);
-  margin-bottom: 12px;
+  margin-bottom: 0.5vh;
 }
 
 .url-text {
-  font-size: 20px;
+  font-size: clamp(12px, 1.6vh, 16px);
   font-weight: 600;
   color: #FFD700;
   background: rgba(0, 0, 0, 0.3);
-  padding: 16px 32px;
-  border-radius: 12px;
+  padding: 1.2vh 2vw;
+  border-radius: 10px;
   display: inline-block;
+  word-break: break-all;
+  max-width: 90%;
 }
 
 .start-button {
-  padding: 24px 60px;
-  font-size: 26px;
+  padding: 2vh 4vw;
+  font-size: clamp(16px, 2.2vh, 22px);
   font-weight: bold;
   background: linear-gradient(135deg, #6DFF6A, #4CAF50);
   border: none;
-  border-radius: 16px;
+  border-radius: 14px;
   color: white;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -75,16 +87,21 @@
 
 /* Votación activa */
 .voting-active-container {
-  width: 100%;
-  max-width: 1100px;
+  width: 90%;
+  max-width: 1000px;
   text-align: center;
+  max-height: 92vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
 }
 
 .voting-active-title {
-  font-size: 52px;
+  font-size: clamp(24px, 4vh, 38px);
   font-weight: bold;
   color: #FFD700;
-  margin-bottom: 60px;
+  margin-bottom: 2.5vh;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
@@ -92,65 +109,69 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 60px;
-  margin-bottom: 50px;
+  gap: 3vw;
+  margin-bottom: 2.5vh;
 }
 
 .vote-item {
   background: rgba(255, 255, 255, 0.15);
-  padding: 50px 60px;
-  border-radius: 24px;
-  min-width: 280px;
+  padding: 3vh 3vw;
+  border-radius: 20px;
+  min-width: 180px;
 }
 
 .vote-item.blau {
-  border: 5px solid #0e487e;
+  border: 4px solid #0e487e;
 }
 
 .vote-item.taronja {
-  border: 5px solid #e03c0a;
+  border: 4px solid #e03c0a;
 }
 
 .vote-number {
-  font-size: 90px;
+  font-size: clamp(40px, 8vh, 70px);
   font-weight: bold;
   color: white;
-  margin-bottom: 15px;
+  margin-bottom: 1vh;
 }
 
 .vote-label {
-  font-size: 28px;
+  font-size: clamp(16px, 2.2vh, 24px);
   font-weight: 600;
   color: rgba(255, 255, 255, 0.9);
 }
 
 .vote-separator {
-  font-size: 56px;
+  font-size: clamp(32px, 6vh, 56px);
   font-weight: bold;
   color: #FFD700;
 }
 
 .internal-countdown {
   background: rgba(0, 0, 0, 0.3);
-  padding: 20px;
+  padding: 1.5vh 2vw;
   border-radius: 12px;
   color: rgba(255, 255, 255, 0.7);
-  font-size: 20px;
+  font-size: clamp(14px, 2vh, 20px);
 }
 
 /* Cuenta atrás final */
 .countdown-container {
   text-align: center;
+  max-height: 95vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .countdown-text {
-  font-size: 36px;
+  font-size: clamp(24px, 4vh, 36px);
   color: white;
-  margin-bottom: 40px;
+  margin-bottom: 3vh;
 }
 
 .countdown-number {
-  font-size: 180px;
+  font-size: clamp(100px, 20vh, 180px);
   font-weight: bold;
   color: #FFD700;
   text-shadow: 0 0 40px rgba(255, 215, 0, 0.6);
@@ -164,49 +185,57 @@
 
 /* Resultados */
 .results-container {
-  width: 100%;
-  max-width: 1200px;
+  width: 90%;
+  max-width: 1100px;
   text-align: center;
+  max-height: 92vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
 }
 
 .results-title {
-  font-size: 64px;
+  font-size: clamp(28px, 4.5vh, 48px);
   font-weight: bold;
   color: #FFD700;
-  margin-bottom: 60px;
+  margin-bottom: 2vh;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .chart-container {
-  margin-bottom: 60px;
+  margin-bottom: 2vh;
   display: flex;
   justify-content: center;
 }
 
 .pie-chart {
   filter: drop-shadow(0 8px 32px rgba(0, 0, 0, 0.3));
+  width: clamp(220px, 30vh, 350px) !important;
+  height: clamp(220px, 30vh, 350px) !important;
 }
 
 .results-details {
   display: flex;
-  gap: 40px;
+  gap: 2.5vw;
   justify-content: center;
-  margin-bottom: 50px;
+  margin-bottom: 2vh;
+  flex-wrap: wrap;
 }
 
 .result-item {
   background: rgba(255, 255, 255, 0.15);
-  padding: 40px 50px;
-  border-radius: 24px;
+  padding: 2vh 2.5vw;
+  border-radius: 20px;
   display: flex;
   align-items: center;
-  gap: 30px;
-  min-width: 380px;
+  gap: 2vw;
+  min-width: 300px;
 }
 
 .result-color {
-  width: 70px;
-  height: 70px;
+  width: clamp(40px, 6vh, 70px);
+  height: clamp(40px, 6vh, 70px);
   border-radius: 50%;
   flex-shrink: 0;
 }
@@ -215,29 +244,29 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 8px;
+  gap: 0.5vh;
 }
 
 .result-name {
-  font-size: 26px;
+  font-size: clamp(18px, 2.5vh, 26px);
   font-weight: bold;
   color: white;
 }
 
 .result-percentage {
-  font-size: 42px;
+  font-size: clamp(28px, 4vh, 42px);
   font-weight: bold;
   color: #FFD700;
 }
 
 .result-votes {
-  font-size: 18px;
+  font-size: clamp(14px, 1.8vh, 18px);
   color: rgba(255, 255, 255, 0.7);
 }
 
 .reset-button-admin {
-  padding: 22px 50px;
-  font-size: 22px;
+  padding: 2vh 4vw;
+  font-size: clamp(16px, 2.2vh, 22px);
   font-weight: bold;
   background: linear-gradient(135deg, #E94E18, #c73d14);
   border: none;
@@ -261,82 +290,87 @@
 .waiting-container, .ended-container, .voted-container {
   text-align: center;
   background: rgba(255, 255, 255, 0.15);
-  padding: 80px 100px;
+  padding: 4vh 5vw;
   border-radius: 24px;
   max-width: 700px;
-  width: 100%;
+  width: 90%;
 }
 
 .waiting-icon, .ended-icon, .voted-icon {
-  font-size: 120px;
-  margin-bottom: 40px;
+  font-size: clamp(60px, 12vh, 120px);
+  margin-bottom: 2vh;
 }
 
 .waiting-title, .ended-title, .voted-title {
-  font-size: 42px;
+  font-size: clamp(24px, 4vh, 42px);
   font-weight: bold;
   color: white;
-  margin-bottom: 20px;
+  margin-bottom: 1vh;
 }
 
 .waiting-subtitle, .ended-subtitle, .voted-subtitle {
-  font-size: 24px;
+  font-size: clamp(16px, 2.5vh, 24px);
   color: rgba(255, 255, 255, 0.8);
 }
 
 .voted-team, .voted-message {
-  margin-top: 30px;
-  padding: 20px;
+  margin-top: 2vh;
+  padding: 1.5vh 2vw;
   background: rgba(255, 215, 0, 0.2);
   border-radius: 12px;
-  font-size: 20px;
+  font-size: clamp(14px, 2vh, 20px);
   color: #FFD700;
 }
 
 /* Pantalla de votar */
 .vote-container {
-  width: 100%;
-  max-width: 900px;
+  width: 90%;
+  max-width: 800px;
   text-align: center;
+  max-height: 92vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
 }
 
 .vote-title {
-  font-size: 56px;
+  font-size: clamp(24px, 4vh, 42px);
   font-weight: bold;
   color: #FFD700;
-  margin-bottom: 20px;
+  margin-bottom: 1.5vh;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .vote-subtitle {
-  font-size: 26px;
+  font-size: clamp(14px, 2.2vh, 20px);
   color: rgba(255, 255, 255, 0.9);
-  margin-bottom: 60px;
+  margin-bottom: 3vh;
 }
 
 .vote-buttons {
   display: flex;
   flex-direction: column;
-  gap: 35px;
+  gap: 2.5vh;
   align-items: center;
 }
 
 .vote-button {
   width: 100%;
-  max-width: 650px;
-  padding: 50px;
-  font-size: 32px;
+  max-width: 600px;
+  padding: 3vh 4vw;
+  font-size: clamp(18px, 2.8vh, 28px);
   font-weight: bold;
   border: none;
-  border-radius: 24px;
+  border-radius: 20px;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
 }
 
 .vote-button:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 16px 50px rgba(0, 0, 0, 0.4);
+  transform: translateY(-6px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
 }
 
 .blau-button {
@@ -361,19 +395,19 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 25px;
+  gap: 2vw;
 }
 
 .vote-emoji {
-  font-size: 56px;
+  font-size: clamp(28px, 4vh, 44px);
 }
 
 .vote-text {
-  font-size: 36px;
+  font-size: clamp(18px, 2.8vh, 30px);
 }
 
 .vote-vs {
-  font-size: 42px;
+  font-size: clamp(20px, 3.5vh, 36px);
   font-weight: bold;
   color: #FFD700;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
