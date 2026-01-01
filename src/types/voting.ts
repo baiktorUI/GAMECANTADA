@@ -1,6 +1,7 @@
 export interface VotingState {
   isActive: boolean;
   hasEnded: boolean;
+  sessionId?: string;
   votes: {
     blau: number;
     taronja: number;
