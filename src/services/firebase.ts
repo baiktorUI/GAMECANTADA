@@ -3,13 +3,13 @@ import { getDatabase, ref, set, onValue, update, get } from 'firebase/database';
 
 // Configuración de Firebase (la cambiarás por la tuya)
 const firebaseConfig = {
-  apiKey: "AIzaSyBdohdA_H2QLDYLrWbcVlNoZwvTgRQFuT8",
-  authDomain: "gamecantada.firebaseapp.com",
-  databaseURL: "https://gamecantada-default-rtdb.europe-west1.firebasedatabase.app/",
-  projectId: "gamecantada",
-  storageBucket: "gamecantada.firebasestorage.app",
-  messagingSenderId: "929846057348",
-  appId: "1:929846057348:web:84e074f947e18238db65d1"
+  apiKey: "TU_API_KEY",
+  authDomain: "TU_PROJECT.firebaseapp.com",
+  databaseURL: "https://TU_PROJECT.firebaseio.com",
+  projectId: "TU_PROJECT_ID",
+  storageBucket: "TU_PROJECT.appspot.com",
+  messagingSenderId: "TU_SENDER_ID",
+  appId: "TU_APP_ID"
 };
 
 let database: any = null;

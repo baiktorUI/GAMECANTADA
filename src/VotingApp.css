@@ -3,86 +3,88 @@
 /* Pantalla QR */
 .admin-container {
   background: rgba(255, 255, 255, 0.15);
-  border-radius: 20px;
-  padding: 50px;
-  width: 90%;
-  max-width: 600px;
+  border-radius: 24px;
+  padding: 60px 80px;
+  width: 100%;
+  max-width: 900px;
   text-align: center;
 }
 
 .admin-title {
-  font-size: 48px;
+  font-size: 56px;
   font-weight: bold;
   color: #FFD700;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .admin-subtitle {
-  font-size: 20px;
+  font-size: 22px;
   color: rgba(255, 255, 255, 0.9);
-  margin-bottom: 40px;
+  margin-bottom: 50px;
 }
 
 .qr-container {
   background: white;
-  padding: 30px;
-  border-radius: 20px;
+  padding: 40px;
+  border-radius: 24px;
   display: inline-block;
-  margin-bottom: 30px;
+  margin-bottom: 40px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
 .voting-url {
-  margin-bottom: 30px;
+  margin-bottom: 40px;
 }
 
 .url-label {
-  font-size: 16px;
+  font-size: 18px;
   color: rgba(255, 255, 255, 0.7);
-  margin-bottom: 8px;
+  margin-bottom: 12px;
 }
 
 .url-text {
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 600;
   color: #FFD700;
   background: rgba(0, 0, 0, 0.3);
-  padding: 12px 24px;
-  border-radius: 10px;
+  padding: 16px 32px;
+  border-radius: 12px;
   display: inline-block;
 }
 
 .start-button {
-  padding: 20px 40px;
-  font-size: 24px;
+  padding: 24px 60px;
+  font-size: 26px;
   font-weight: bold;
   background: linear-gradient(135deg, #6DFF6A, #4CAF50);
   border: none;
-  border-radius: 15px;
+  border-radius: 16px;
   color: white;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(109, 255, 106, 0.4);
+  box-shadow: 0 6px 20px rgba(109, 255, 106, 0.4);
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .start-button:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 25px rgba(109, 255, 106, 0.6);
+  box-shadow: 0 10px 30px rgba(109, 255, 106, 0.6);
 }
 
 /* Votación activa */
 .voting-active-container {
-  width: 90%;
-  max-width: 800px;
+  width: 100%;
+  max-width: 1100px;
   text-align: center;
 }
 
 .voting-active-title {
-  font-size: 42px;
+  font-size: 52px;
   font-weight: bold;
   color: #FFD700;
-  margin-bottom: 40px;
+  margin-bottom: 60px;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
@@ -90,50 +92,50 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 40px;
-  margin-bottom: 30px;
+  gap: 60px;
+  margin-bottom: 50px;
 }
 
 .vote-item {
   background: rgba(255, 255, 255, 0.15);
-  padding: 40px;
-  border-radius: 20px;
-  min-width: 200px;
+  padding: 50px 60px;
+  border-radius: 24px;
+  min-width: 280px;
 }
 
 .vote-item.blau {
-  border: 4px solid #0e487e;
+  border: 5px solid #0e487e;
 }
 
 .vote-item.taronja {
-  border: 4px solid #e03c0a;
+  border: 5px solid #e03c0a;
 }
 
 .vote-number {
-  font-size: 72px;
+  font-size: 90px;
   font-weight: bold;
   color: white;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
 }
 
 .vote-label {
-  font-size: 24px;
+  font-size: 28px;
   font-weight: 600;
   color: rgba(255, 255, 255, 0.9);
 }
 
 .vote-separator {
-  font-size: 48px;
+  font-size: 56px;
   font-weight: bold;
   color: #FFD700;
 }
 
 .internal-countdown {
   background: rgba(0, 0, 0, 0.3);
-  padding: 15px;
-  border-radius: 10px;
+  padding: 20px;
+  border-radius: 12px;
   color: rgba(255, 255, 255, 0.7);
-  font-size: 18px;
+  font-size: 20px;
 }
 
 /* Cuenta atrás final */
@@ -162,21 +164,21 @@
 
 /* Resultados */
 .results-container {
-  width: 90%;
-  max-width: 900px;
+  width: 100%;
+  max-width: 1200px;
   text-align: center;
 }
 
 .results-title {
-  font-size: 56px;
+  font-size: 64px;
   font-weight: bold;
   color: #FFD700;
-  margin-bottom: 50px;
+  margin-bottom: 60px;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .chart-container {
-  margin-bottom: 50px;
+  margin-bottom: 60px;
   display: flex;
   justify-content: center;
 }
@@ -187,24 +189,24 @@
 
 .results-details {
   display: flex;
-  gap: 30px;
+  gap: 40px;
   justify-content: center;
-  margin-bottom: 40px;
+  margin-bottom: 50px;
 }
 
 .result-item {
   background: rgba(255, 255, 255, 0.15);
-  padding: 30px;
-  border-radius: 20px;
+  padding: 40px 50px;
+  border-radius: 24px;
   display: flex;
   align-items: center;
-  gap: 20px;
-  min-width: 300px;
+  gap: 30px;
+  min-width: 380px;
 }
 
 .result-color {
-  width: 60px;
-  height: 60px;
+  width: 70px;
+  height: 70px;
   border-radius: 50%;
   flex-shrink: 0;
 }
@@ -213,42 +215,44 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 5px;
+  gap: 8px;
 }
 
 .result-name {
-  font-size: 24px;
+  font-size: 26px;
   font-weight: bold;
   color: white;
 }
 
 .result-percentage {
-  font-size: 36px;
+  font-size: 42px;
   font-weight: bold;
   color: #FFD700;
 }
 
 .result-votes {
-  font-size: 16px;
+  font-size: 18px;
   color: rgba(255, 255, 255, 0.7);
 }
 
 .reset-button-admin {
-  padding: 18px 40px;
-  font-size: 20px;
+  padding: 22px 50px;
+  font-size: 22px;
   font-weight: bold;
   background: linear-gradient(135deg, #E94E18, #c73d14);
   border: none;
-  border-radius: 15px;
+  border-radius: 16px;
   color: white;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(233, 78, 24, 0.4);
+  box-shadow: 0 6px 20px rgba(233, 78, 24, 0.4);
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .reset-button-admin:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 25px rgba(233, 78, 24, 0.6);
+  box-shadow: 0 10px 30px rgba(233, 78, 24, 0.6);
 }
 
 /* ==================== VOTING SCREEN ==================== */
@@ -257,81 +261,82 @@
 .waiting-container, .ended-container, .voted-container {
   text-align: center;
   background: rgba(255, 255, 255, 0.15);
-  padding: 60px;
-  border-radius: 20px;
-  max-width: 500px;
+  padding: 80px 100px;
+  border-radius: 24px;
+  max-width: 700px;
+  width: 100%;
 }
 
 .waiting-icon, .ended-icon, .voted-icon {
-  font-size: 100px;
-  margin-bottom: 30px;
+  font-size: 120px;
+  margin-bottom: 40px;
 }
 
 .waiting-title, .ended-title, .voted-title {
-  font-size: 36px;
+  font-size: 42px;
   font-weight: bold;
   color: white;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
 }
 
 .waiting-subtitle, .ended-subtitle, .voted-subtitle {
-  font-size: 20px;
+  font-size: 24px;
   color: rgba(255, 255, 255, 0.8);
 }
 
 .voted-team, .voted-message {
-  margin-top: 20px;
-  padding: 15px;
+  margin-top: 30px;
+  padding: 20px;
   background: rgba(255, 215, 0, 0.2);
-  border-radius: 10px;
-  font-size: 18px;
+  border-radius: 12px;
+  font-size: 20px;
   color: #FFD700;
 }
 
 /* Pantalla de votar */
 .vote-container {
-  width: 90%;
-  max-width: 700px;
+  width: 100%;
+  max-width: 900px;
   text-align: center;
 }
 
 .vote-title {
-  font-size: 48px;
+  font-size: 56px;
   font-weight: bold;
   color: #FFD700;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .vote-subtitle {
-  font-size: 22px;
+  font-size: 26px;
   color: rgba(255, 255, 255, 0.9);
-  margin-bottom: 50px;
+  margin-bottom: 60px;
 }
 
 .vote-buttons {
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  gap: 35px;
   align-items: center;
 }
 
 .vote-button {
   width: 100%;
-  max-width: 500px;
-  padding: 40px;
+  max-width: 650px;
+  padding: 50px;
   font-size: 32px;
   font-weight: bold;
   border: none;
-  border-radius: 20px;
+  border-radius: 24px;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
 }
 
 .vote-button:hover {
   transform: translateY(-8px);
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 16px 50px rgba(0, 0, 0, 0.4);
 }
 
 .blau-button {
@@ -356,19 +361,19 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 20px;
+  gap: 25px;
 }
 
 .vote-emoji {
-  font-size: 48px;
+  font-size: 56px;
 }
 
 .vote-text {
-  font-size: 32px;
+  font-size: 36px;
 }
 
 .vote-vs {
-  font-size: 36px;
+  font-size: 42px;
   font-weight: bold;
   color: #FFD700;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
