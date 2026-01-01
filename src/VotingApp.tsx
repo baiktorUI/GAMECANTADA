@@ -63,7 +63,9 @@ const VotingApp: React.FC = () => {
   };
 
   const handleVote = async (team: 'blau' | 'taronja') => {
-    await votingService.vote(team);
+    const { getDeviceId } = await import('./services/firebase');
+    const deviceId = getDeviceId();
+    await votingService.vote(team, deviceId);
   };
 
   if (isAdmin) {
