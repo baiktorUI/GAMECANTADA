@@ -58,16 +58,42 @@ export const votingService = {
       votes: {
         blau: 0,
         taronja: 0
-      }
+      },
+      voters: {} // Limpiar lista de votantes
     });
   },
 
-  // Votar por un equipo
-  vote: async (team: 'blau' | 'taronja') => {
+  // Votar por un equipo (con control de deviceId)
+  vote: async (team: 'blau' | 'taronja', deviceId: string) => {
+    // Primero verificar si este dispositivo ya votó
+    const deviceRef = ref(database, `voting/voters/${deviceId}`);
+    const snapshot = await get(deviceRef);
+    
+    if (snapshot.exists()) {
+      // Ya votó, no contar el voto
+      return false;
+    }
+    
+    // Registrar el voto del dispositivo
+    await set(deviceRef, {
+      team: team,
+      timestamp: Date.now()
+    });
+    
+    // Incrementar el contador
     const votesRef = ref(database, `voting/votes/${team}`);
-    const snapshot = await get(votesRef);
-    const currentVotes = snapshot.val() || 0;
+    const votesSnapshot = await get(votesRef);
+    const currentVotes = votesSnapshot.val() || 0;
     await set(votesRef, currentVotes + 1);
+    
+    return true;
+  },
+
+  // Verificar si un dispositivo ya votó
+  hasVoted: async (deviceId: string) => {
+    const deviceRef = ref(database, `voting/voters/${deviceId}`);
+    const snapshot = await get(deviceRef);
+    return snapshot.exists() ? snapshot.val() : null;
   },
 
   // Escuchar cambios en los votos
@@ -89,4 +115,43 @@ export const votingService = {
     });
     return unsubscribe;
   }
+};
+
+// Generar ID único del dispositivo (fingerprint simple)
+export const getDeviceId = (): string => {
+  let deviceId = localStorage.getItem('deviceId');
+  
+  if (!deviceId) {
+    // Crear fingerprint del dispositivo
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    if (ctx) {
+      ctx.textBaseline = 'top';
+      ctx.font = '14px Arial';
+      ctx.fillText('fingerprint', 2, 2);
+    }
+    
+    const fingerprint = [
+      navigator.userAgent,
+      navigator.language,
+      screen.width,
+      screen.height,
+      screen.colorDepth,
+      new Date().getTimezoneOffset(),
+      canvas.toDataURL()
+    ].join('|');
+    
+    // Crear hash simple
+    let hash = 0;
+    for (let i = 0; i < fingerprint.length; i++) {
+      const char = fingerprint.charCodeAt(i);
+      hash = ((hash << 5) - hash) + char;
+      hash = hash & hash;
+    }
+    
+    deviceId = 'device_' + Math.abs(hash).toString(36) + '_' + Date.now().toString(36);
+    localStorage.setItem('deviceId', deviceId);
+  }
+  
+  return deviceId;
 };
