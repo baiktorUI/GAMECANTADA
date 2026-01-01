@@ -112,7 +112,7 @@ export const AdminScreen: React.FC<AdminScreenProps> = ({
           </div>
 
           <button onClick={handleStart} className="start-button">
-            🎬 COMENÇAR VOTACIÓ
+            COMENÇAR VOTACIÓ
           </button>
         </div>
       </div>
@@ -140,13 +140,13 @@ export const AdminScreen: React.FC<AdminScreenProps> = ({
 
           <div className="chart-container">
             {/* Gráfico circular */}
-            <svg width="400" height="400" viewBox="0 0 400 400" className="pie-chart">
+            <svg viewBox="0 0 400 400" className="pie-chart">
               <circle
                 cx="200"
                 cy="200"
                 r="150"
                 fill="none"
-                stroke="#0e487e"
+                stroke="#383294"
                 strokeWidth="100"
                 strokeDasharray={`${blauPercentage * 9.42} ${(100 - blauPercentage) * 9.42}`}
                 transform="rotate(-90 200 200)"
@@ -156,7 +156,7 @@ export const AdminScreen: React.FC<AdminScreenProps> = ({
                 cy="200"
                 r="150"
                 fill="none"
-                stroke="#e03c0a"
+                stroke="#FF551A"
                 strokeWidth="100"
                 strokeDasharray={`${taronjaPercentage * 9.42} ${(100 - taronjaPercentage) * 9.42}`}
                 strokeDashoffset={`-${blauPercentage * 9.42}`}
@@ -173,7 +173,7 @@ export const AdminScreen: React.FC<AdminScreenProps> = ({
 
           <div className="results-details">
             <div className="result-item blau">
-              <div className="result-color" style={{ background: '#0e487e' }}></div>
+              <div className="result-color" style={{ background: '#383294' }}></div>
               <div className="result-info">
                 <span className="result-name">EQUIP BLAU</span>
                 <span className="result-percentage">{blauPercentage.toFixed(1)}%</span>
@@ -182,7 +182,7 @@ export const AdminScreen: React.FC<AdminScreenProps> = ({
             </div>
 
             <div className="result-item taronja">
-              <div className="result-color" style={{ background: '#e03c0a' }}></div>
+              <div className="result-color" style={{ background: '#FF551A' }}></div>
               <div className="result-info">
                 <span className="result-name">EQUIP TARONJA</span>
                 <span className="result-percentage">{taronjaPercentage.toFixed(1)}%</span>
@@ -192,7 +192,7 @@ export const AdminScreen: React.FC<AdminScreenProps> = ({
           </div>
 
           <button onClick={handleReset} className="reset-button-admin">
-            🔄 NOVA VOTACIÓ
+            NOVA VOTACIÓ
           </button>
         </div>
       </div>
