@@ -9,37 +9,53 @@ interface VotingScreenProps {
 export const VotingScreen: React.FC<VotingScreenProps> = ({ votingState, onVote }) => {
   const [hasVoted, setHasVoted] = useState(false);
   const [selectedTeam, setSelectedTeam] = useState<'blau' | 'taronja' | null>(null);
+  const [sessionId, setSessionId] = useState<string>('');
 
-  // Comprobar si ya ha votado al cargar
+  // Generar ID de sesión único al cargar
+  useEffect(() => {
+    const currentSessionId = localStorage.getItem('votingSessionId') || '';
+    setSessionId(currentSessionId);
+  }, []);
+
+  // Comprobar si ya ha votado en esta sesión
   useEffect(() => {
     const voted = localStorage.getItem('hasVoted');
     const team = localStorage.getItem('votedTeam') as 'blau' | 'taronja' | null;
+    const storedSessionId = localStorage.getItem('votedInSession');
     
-    if (voted === 'true' && team) {
+    if (voted === 'true' && team && storedSessionId === sessionId && sessionId !== '') {
       setHasVoted(true);
       setSelectedTeam(team);
     }
-  }, []);
+  }, [sessionId]);
 
-  // Resetear voto cuando se resetea la votación
+  // Resetear voto SOLO cuando el admin resetea (nueva sesión)
   useEffect(() => {
     if (!votingState.isActive && !votingState.hasEnded) {
+      // El admin ha reseteado - crear nueva sesión
+      const newSessionId = Date.now().toString();
+      localStorage.setItem('votingSessionId', newSessionId);
+      setSessionId(newSessionId);
+      
+      // Limpiar voto anterior
       localStorage.removeItem('hasVoted');
       localStorage.removeItem('votedTeam');
+      localStorage.removeItem('votedInSession');
       setHasVoted(false);
       setSelectedTeam(null);
     }
   }, [votingState.isActive, votingState.hasEnded]);
 
   const handleVote = (team: 'blau' | 'taronja') => {
-    if (hasVoted) return;
+    if (hasVoted || !votingState.isActive) return;
     
     setSelectedTeam(team);
     setHasVoted(true);
     
-    // Guardar en localStorage para evitar votos repetidos
+    // Guardar en localStorage con el ID de sesión
     localStorage.setItem('hasVoted', 'true');
     localStorage.setItem('votedTeam', team);
+    localStorage.setItem('votedInSession', sessionId);
     
     onVote(team);
   };
