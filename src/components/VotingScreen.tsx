@@ -9,34 +9,32 @@ interface VotingScreenProps {
 export const VotingScreen: React.FC<VotingScreenProps> = ({ votingState, onVote }) => {
   const [hasVoted, setHasVoted] = useState(false);
   const [selectedTeam, setSelectedTeam] = useState<'blau' | 'taronja' | null>(null);
+  const [checking, setChecking] = useState(true);
 
-  // Comprobar si ya votó en ESTA sesión
+  // Verificar en Firebase si este dispositivo ya votó
   useEffect(() => {
-    const votedSessionId = localStorage.getItem('votedInSession');
-    const team = localStorage.getItem('votedTeam') as 'blau' | 'taronja' | null;
+    const checkVote = async () => {
+      const { votingService, getDeviceId } = await import('../services/firebase');
+      const deviceId = getDeviceId();
+      const voteData = await votingService.hasVoted(deviceId);
+      
+      if (voteData) {
+        setHasVoted(true);
+        setSelectedTeam(voteData.team);
+      }
+      setChecking(false);
+    };
     
-    // Si votó en esta misma sesión, bloquear
-    if (votedSessionId && votedSessionId === votingState.sessionId && team) {
-      setHasVoted(true);
-      setSelectedTeam(team);
-    } else if (votedSessionId !== votingState.sessionId) {
-      // Nueva sesión, limpiar voto anterior
-      setHasVoted(false);
-      setSelectedTeam(null);
-    }
-  }, [votingState.sessionId]);
+    checkVote();
+  }, []);
 
-  const handleVote = (team: 'blau' | 'taronja') => {
-    if (hasVoted || !votingState.isActive) return;
+  const handleVote = async (team: 'blau' | 'taronja') => {
+    if (hasVoted || !votingState.isActive || checking) return;
     
-    setSelectedTeam(team);
     setHasVoted(true);
+    setSelectedTeam(team);
     
-    // Guardar con el sessionId actual
-    localStorage.setItem('votedInSession', votingState.sessionId || '');
-    localStorage.setItem('votedTeam', team);
-    
-    onVote(team);
+    await onVote(team);
   };
 
   // PANTALLA: Esperando a que inicie la votación
