@@ -39,7 +39,8 @@ const VotingApp: React.FC = () => {
       setVotingState(prev => ({
         ...prev,
         isActive: state.isActive,
-        hasEnded: state.hasEnded
+        hasEnded: state.hasEnded,
+        sessionId: state.sessionId
       }));
     });
 
