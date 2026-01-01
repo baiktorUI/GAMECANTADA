@@ -125,11 +125,11 @@
 }
 
 .vote-item.blau {
-  border: 4px solid #0e487e;
+  border: 4px solid #383294;
 }
 
 .vote-item.taronja {
-  border: 4px solid #e03c0a;
+  border: 4px solid #FF551A;
 }
 
 .vote-number {
@@ -223,7 +223,7 @@
   display: flex;
   gap: 2.5vw;
   justify-content: center;
-  margin-bottom: 2vh;
+  margin-bottom: 4vh;
   flex-wrap: wrap;
 }
 
@@ -235,6 +235,15 @@
   align-items: center;
   gap: 2vw;
   min-width: 300px;
+  border: 3px solid transparent;
+}
+
+.result-item:first-child {
+  border-color: #383294;
+}
+
+.result-item:last-child {
+  border-color: #FF551A;
 }
 
 .result-color {
@@ -269,23 +278,27 @@
 }
 
 .reset-button-admin {
-  padding: 2vh 4vw;
-  font-size: clamp(16px, 2.2vh, 22px);
-  font-weight: bold;
-  background: linear-gradient(135deg, #E94E18, #c73d14);
-  border: none;
-  border-radius: 16px;
-  color: white;
+  padding: 1.5vh 3vw;
+  font-size: clamp(13px, 1.6vh, 16px);
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+  color: rgba(255, 255, 255, 0.8);
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 6px 20px rgba(233, 78, 24, 0.4);
-  text-transform: uppercase;
-  letter-spacing: 1px;
+  box-shadow: none;
+  text-transform: none;
+  letter-spacing: 0.5px;
+  margin-top: 2vh;
 }
 
 .reset-button-admin:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 10px 30px rgba(233, 78, 24, 0.6);
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.5);
+  color: white;
+  transform: none;
+  box-shadow: none;
 }
 
 /* ==================== VOTING SCREEN ==================== */
@@ -378,21 +391,21 @@
 }
 
 .blau-button {
-  background: linear-gradient(135deg, #0e487e, #1a5ca0);
+  background: linear-gradient(135deg, #383294, #4a42b8);
   color: white;
 }
 
 .blau-button:hover {
-  background: linear-gradient(135deg, #1a5ca0, #2670c2);
+  background: linear-gradient(135deg, #4a42b8, #5c52dc);
 }
 
 .taronja-button {
-  background: linear-gradient(135deg, #e03c0a, #ff5722);
+  background: linear-gradient(135deg, #FF551A, #ff6a3d);
   color: white;
 }
 
 .taronja-button:hover {
-  background: linear-gradient(135deg, #ff5722, #ff7043);
+  background: linear-gradient(135deg, #ff6a3d, #ff8060);
 }
 
 .vote-button-content {
