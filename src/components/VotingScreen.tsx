@@ -90,7 +90,7 @@ export const VotingScreen: React.FC<VotingScreenProps> = ({ votingState, onVote 
   return (
     <div className="app-container flex items-center justify-center">
       <div className="vote-container">
-        <h1 className="vote-title">VOTA EL TEU EQUIP</h1>
+        <h1 className="vote-title">QUI HO HA FET MILLOR?</h1>
         <p className="vote-subtitle">Escull una opció</p>
 
         <div className="vote-buttons">
