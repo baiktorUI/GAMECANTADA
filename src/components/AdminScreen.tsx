@@ -112,7 +112,7 @@ export const AdminScreen: React.FC<AdminScreenProps> = ({
           </div>
 
           <button onClick={handleStart} className="start-button">
-            COMENÇAR VOTACIÓ
+            🎬 COMENÇAR VOTACIÓ
           </button>
         </div>
       </div>
@@ -192,7 +192,7 @@ export const AdminScreen: React.FC<AdminScreenProps> = ({
           </div>
 
           <button onClick={handleReset} className="reset-button-admin">
-            NOVA VOTACIÓ
+            🔄 NOVA VOTACIÓ
           </button>
         </div>
       </div>
