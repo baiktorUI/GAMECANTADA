@@ -46,12 +46,14 @@ export const votingService = {
 
   // Resetear votación
   resetVoting: async () => {
+    const sessionId = Date.now().toString(); // Nuevo ID de sesión
     const votingRef = ref(database, 'voting');
     await set(votingRef, {
       state: {
         isActive: false,
         hasEnded: false,
-        startTime: null
+        startTime: null,
+        sessionId: sessionId // Guardar ID de sesión
       },
       votes: {
         blau: 0,
@@ -79,7 +81,7 @@ export const votingService = {
   },
 
   // Escuchar cambios en el estado de la votación
-  subscribeToVotingState: (callback: (state: { isActive: boolean; hasEnded: boolean }) => void) => {
+  subscribeToVotingState: (callback: (state: { isActive: boolean; hasEnded: boolean; sessionId?: string }) => void) => {
     const stateRef = ref(database, 'voting/state');
     const unsubscribe = onValue(stateRef, (snapshot) => {
       const data = snapshot.val() || { isActive: false, hasEnded: false };
