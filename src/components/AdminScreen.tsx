@@ -136,18 +136,6 @@ export const AdminScreen: React.FC<AdminScreenProps> = ({
     return (
       <div className="app-container flex items-center justify-center">
         <div className="results-container">
-          {/* QR pequeño arriba a la derecha */}
-          <div className="qr-fixed">
-            <QRCodeSVG
-              value={votingUrl}
-              size={120}
-              bgColor="#ffffff"
-              fgColor="#000000"
-              level="H"
-              includeMargin={true}
-            />
-          </div>
-
           <h1 className="results-title">RESULTATS</h1>
 
           <div className="chart-container">
@@ -232,7 +220,7 @@ export const AdminScreen: React.FC<AdminScreenProps> = ({
         {/* Cuenta atrás grande */}
         <div className="countdown-display">
           <div className="countdown-label">Temps restant</div>
-          <div className="countdown-big">{countdown}s</div>
+          <div className="countdown-big">{countdown}</div>
         </div>
 
         {/* Gráfico de queso SIN números */}
