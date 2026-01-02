@@ -136,6 +136,18 @@ export const AdminScreen: React.FC<AdminScreenProps> = ({
     return (
       <div className="app-container flex items-center justify-center">
         <div className="results-container">
+          {/* QR pequeño arriba a la derecha */}
+          <div className="qr-fixed">
+            <QRCodeSVG
+              value={votingUrl}
+              size={120}
+              bgColor="#ffffff"
+              fgColor="#000000"
+              level="H"
+              includeMargin={true}
+            />
+          </div>
+
           <h1 className="results-title">RESULTATS</h1>
 
           <div className="chart-container">
@@ -203,24 +215,51 @@ export const AdminScreen: React.FC<AdminScreenProps> = ({
   return (
     <div className="app-container flex items-center justify-center">
       <div className="voting-active-container">
-        <h1 className="voting-active-title">VOTACIÓ EN CURS</h1>
-        
-        <div className="votes-display">
-          <div className="vote-item blau">
-            <div className="vote-number">{votingState.votes.blau}</div>
-            <div className="vote-label">EQUIP BLAU</div>
-          </div>
-
-          <div className="vote-separator">VS</div>
-
-          <div className="vote-item taronja">
-            <div className="vote-number">{votingState.votes.taronja}</div>
-            <div className="vote-label">EQUIP TARONJA</div>
-          </div>
+        {/* QR pequeño arriba a la derecha */}
+        <div className="qr-fixed">
+          <QRCodeSVG
+            value={votingUrl}
+            size={120}
+            bgColor="#ffffff"
+            fgColor="#000000"
+            level="H"
+            includeMargin={true}
+          />
         </div>
 
-        <div className="internal-countdown">
-          <p>Temps restant (només admin): {countdown}s</p>
+        <h1 className="voting-active-title">VOTACIÓ EN CURS</h1>
+        
+        {/* Cuenta atrás grande */}
+        <div className="countdown-display">
+          <div className="countdown-label">Temps restant</div>
+          <div className="countdown-big">{countdown}s</div>
+        </div>
+
+        {/* Gráfico de queso SIN números */}
+        <div className="live-chart-container">
+          <svg viewBox="0 0 300 300" className="live-pie-chart">
+            <circle
+              cx="150"
+              cy="150"
+              r="100"
+              fill="none"
+              stroke="#383294"
+              strokeWidth="80"
+              strokeDasharray={`${blauPercentage * 6.28} ${(100 - blauPercentage) * 6.28}`}
+              transform="rotate(-90 150 150)"
+            />
+            <circle
+              cx="150"
+              cy="150"
+              r="100"
+              fill="none"
+              stroke="#FF551A"
+              strokeWidth="80"
+              strokeDasharray={`${taronjaPercentage * 6.28} ${(100 - taronjaPercentage) * 6.28}`}
+              strokeDashoffset={`-${blauPercentage * 6.28}`}
+              transform="rotate(-90 150 150)"
+            />
+          </svg>
         </div>
       </div>
     </div>
