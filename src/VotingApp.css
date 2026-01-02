@@ -153,6 +153,49 @@
   filter: drop-shadow(0 8px 32px rgba(0, 0, 0, 0.3));
 }
 
+/* Barra de progreso */
+.progress-bar-container {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.progress-bar {
+  display: flex;
+  width: 100%;
+  height: clamp(80px, 15vh, 150px);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+
+.progress-segment {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  min-width: 50px;
+}
+
+.blau-segment {
+  background: linear-gradient(135deg, #383294, #4a42b8);
+}
+
+.taronja-segment {
+  background: linear-gradient(135deg, #FF551A, #ff6a3d);
+}
+
+.team-label {
+  font-size: clamp(18px, 3vh, 32px);
+  font-weight: bold;
+  color: white;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
 .votes-display {
   display: flex;
   align-items: center;
