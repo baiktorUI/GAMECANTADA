@@ -223,31 +223,22 @@ export const AdminScreen: React.FC<AdminScreenProps> = ({
           <div className="countdown-big">{countdown}</div>
         </div>
 
-        {/* Gráfico de queso SIN números */}
-        <div className="live-chart-container">
-          <svg viewBox="0 0 300 300" className="live-pie-chart">
-            <circle
-              cx="150"
-              cy="150"
-              r="100"
-              fill="none"
-              stroke="#383294"
-              strokeWidth="80"
-              strokeDasharray={`${blauPercentage * 6.28} ${(100 - blauPercentage) * 6.28}`}
-              transform="rotate(-90 150 150)"
-            />
-            <circle
-              cx="150"
-              cy="150"
-              r="100"
-              fill="none"
-              stroke="#FF551A"
-              strokeWidth="80"
-              strokeDasharray={`${taronjaPercentage * 6.28} ${(100 - taronjaPercentage) * 6.28}`}
-              strokeDashoffset={`-${blauPercentage * 6.28}`}
-              transform="rotate(-90 150 150)"
-            />
-          </svg>
+        {/* Barra de progreso animada */}
+        <div className="progress-bar-container">
+          <div className="progress-bar">
+            <div 
+              className="progress-segment blau-segment"
+              style={{ width: `${blauPercentage}%` }}
+            >
+              <span className="team-label">BLAU</span>
+            </div>
+            <div 
+              className="progress-segment taronja-segment"
+              style={{ width: `${taronjaPercentage}%` }}
+            >
+              <span className="team-label">TARONJA</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
