@@ -42,10 +42,10 @@ export const AdminScreen: React.FC<AdminScreenProps> = ({
     if (votingState.isActive && !showFinalCountdown) {
       const timer = setInterval(() => {
         setCountdown((prev) => {
-          if (prev <= 1) {
+          if (prev <= 11) {
             clearInterval(timer);
             setShowFinalCountdown(true);
-            return 0;
+            return 10;
           }
           return prev - 1;
         });
@@ -59,7 +59,7 @@ export const AdminScreen: React.FC<AdminScreenProps> = ({
   useEffect(() => {
     if (showFinalCountdown) {
       const timer = setInterval(() => {
-        setFinalCountdown((prev) => {
+        setCountdown((prev) => {
           if (prev <= 1) {
             clearInterval(timer);
             onEndVoting();
@@ -119,13 +119,26 @@ export const AdminScreen: React.FC<AdminScreenProps> = ({
     );
   }
 
-  // PANTALLA: Cuenta atrás de 10 segundos
+  // PANTALLA: Cuenta atrás final (últimos 10 segundos)
   if (showFinalCountdown && !votingState.hasEnded) {
     return (
       <div className="app-container flex items-center justify-center">
+        {/* QR pequeño arriba a la derecha */}
+        <div className="qr-fixed">
+          <QRCodeSVG
+            value={votingUrl}
+            size={120}
+            bgColor="#ffffff"
+            fgColor="#000000"
+            level="H"
+            includeMargin={true}
+          />
+          <div className="qr-text">Escaneja el QR</div>
+        </div>
+
         <div className="countdown-container">
           <h2 className="countdown-text">Tancant votació en...</h2>
-          <div className="countdown-number">{finalCountdown}</div>
+          <div className="countdown-number">{countdown}</div>
         </div>
       </div>
     );
@@ -213,6 +226,7 @@ export const AdminScreen: React.FC<AdminScreenProps> = ({
             level="H"
             includeMargin={true}
           />
+          <div className="qr-text">Escaneja el QR</div>
         </div>
 
         <h1 className="voting-active-title">VOTACIÓ EN CURS</h1>
