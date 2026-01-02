@@ -99,6 +99,19 @@
   flex-direction: column;
   justify-content: center;
   overflow: hidden;
+  position: relative;
+}
+
+/* QR fijo en esquina */
+.qr-fixed {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: white;
+  padding: 15px;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
 }
 
 .voting-active-title {
@@ -107,6 +120,37 @@
   color: #FFD700;
   margin-bottom: 2.5vh;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Cuenta atrás grande */
+.countdown-display {
+  margin-bottom: 3vh;
+}
+
+.countdown-label {
+  font-size: clamp(16px, 2vh, 20px);
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 1vh;
+}
+
+.countdown-big {
+  font-size: clamp(60px, 12vh, 100px);
+  font-weight: bold;
+  color: #FFD700;
+  text-shadow: 0 0 30px rgba(255, 215, 0, 0.6);
+}
+
+/* Gráfico en vivo */
+.live-chart-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.live-pie-chart {
+  width: clamp(200px, 35vh, 350px) !important;
+  height: clamp(200px, 35vh, 350px) !important;
+  filter: drop-shadow(0 8px 32px rgba(0, 0, 0, 0.3));
 }
 
 .votes-display {
